@@ -1,79 +1,286 @@
 // scripts/fetch-github-stats.ts
-// Runs at build time via: npx tsx scripts/fetch-github-stats.ts
-// Writes to public/github-stats.json — fetched by frontend at runtime
-import { writeFileSync, mkdirSync } from 'fs';
+// Run: npx tsx scripts/fetch-github-stats.ts
+// Output: public/github-stats.json
+
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
-const ORG = 'NekoTech-Foundation';
-const TOKEN = process.env.GITHUB_TOKEN;
+const ORG = 'nekoo-moe';
 
-if (!TOKEN) {
-  console.warn('[github-stats] No GITHUB_TOKEN found — writing fallback data. Set GITHUB_TOKEN in .env.local for full stats including private repos.');
+// ── Always load .env.local first (overrides any stale session vars) ──────────
+function loadEnvLocal() {
+  const envPath = resolve('.env.local');
+  if (!existsSync(envPath)) return;
+  const raw = readFileSync(envPath, 'utf-8');
+  for (const line of raw.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx === -1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    // Always override — file wins over stale session vars
+    const val = trimmed.slice(eqIdx + 1).trim().replace(/\r/g, '').replace(/^["']|["']$/g, '');
+    if (key && val) process.env[key] = val;
+  }
 }
 
-async function fetchWithAuth(url: string) {
+loadEnvLocal();
+
+const TOKEN = process.env.GITHUB_TOKEN;
+if (!TOKEN) {
+  console.warn('[github-stats] No GITHUB_TOKEN — writing fallback data.');
+} else {
+  console.log('[github-stats] Token loaded ✓ (length:', TOKEN.length, ')');
+}
+
+// ── HTTP helpers ─────────────────────────────────────────────────────────────
+
+// Authenticated fetch — for private endpoints
+async function fetchAuth(url: string) {
+  const token = process.env.GITHUB_TOKEN;
   const res = await fetch(url, {
     headers: {
-      ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
     },
   });
-  if (!res.ok) throw new Error(`GitHub API error ${res.status}: ${url}`);
+  if (!res.ok) throw new Error(`GH ${res.status}: ${url}`);
   return res.json();
 }
 
+// Unauthenticated fetch — for public org data (non-member tokens get 401 on org routes)
+async function fetchPub(url: string) {
+  const res = await fetch(url, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+  if (!res.ok) throw new Error(`GH ${res.status}: ${url}`);
+  return res.json();
+}
+
+// Smart paginate: uses auth when token available (sees private repos), else public
+async function paginate(baseUrl: string): Promise<any[]> {
+  const all: any[] = [];
+  let page = 1;
+  const fetcher = process.env.GITHUB_TOKEN ? fetchAuth : fetchPub;
+  while (true) {
+    const sep = baseUrl.includes('?') ? '&' : '?';
+    const data = await fetcher(`${baseUrl}${sep}per_page=100&page=${page}`) as any[];
+    if (!Array.isArray(data) || data.length === 0) break;
+    all.push(...data);
+    if (data.length < 100) break;
+    page++;
+  }
+  return all;
+}
+
+// ── Commit helpers ────────────────────────────────────────────────────────────
+
+// Total commits for a single repo via participation stats
+async function repoCommitCount(repoName: string): Promise<number> {
+  try {
+    const fetcher = process.env.GITHUB_TOKEN ? fetchAuth : fetchPub;
+    const data = await fetcher(
+      `https://api.github.com/repos/${ORG}/${repoName}/stats/participation`
+    ) as any;
+    if (data?.all && Array.isArray(data.all)) {
+      return (data.all as number[]).reduce((a, b) => a + b, 0);
+    }
+  } catch { /* skip */ }
+  return 0;
+}
+
+// 52-week commit activity across top repos
+async function orgCommitActivity(repos: any[]): Promise<number[]> {
+  const weekly = new Array(52).fill(0);
+  const fetcher = process.env.GITHUB_TOKEN ? fetchAuth : fetchPub;
+  const top15 = [...repos]
+    .sort((a, b) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime())
+    .slice(0, 15);
+
+  for (const repo of top15) {
+    try {
+      const data = await fetcher(
+        `https://api.github.com/repos/${ORG}/${repo.name}/stats/participation`
+      ) as any;
+      if (data?.all && Array.isArray(data.all)) {
+        (data.all as number[]).forEach((n, i) => { if (i < 52) weekly[i] += n; });
+      }
+      await new Promise(r => setTimeout(r, 120));
+    } catch { /* skip */ }
+  }
+  return weekly;
+}
+
+// Language bytes across up to 20 repos
+async function orgLanguages(repos: any[]): Promise<Record<string, number>> {
+  const bytes: Record<string, number> = {};
+  const fetcher = process.env.GITHUB_TOKEN ? fetchAuth : fetchPub;
+  for (const repo of repos.slice(0, 20)) {
+    try {
+      const data = await fetcher(
+        `https://api.github.com/repos/${ORG}/${repo.name}/languages`
+      ) as Record<string, number>;
+      for (const [lang, b] of Object.entries(data)) {
+        bytes[lang] = (bytes[lang] ?? 0) + b;
+      }
+      await new Promise(r => setTimeout(r, 80));
+    } catch { /* skip */ }
+  }
+  return bytes;
+}
+
+// ── Fallback data ─────────────────────────────────────────────────────────────
+const FALLBACK = {
+  members: 6,
+  repos: 12,
+  privateRepos: 3,
+  publicRepos: 9,
+  totalStars: 47,
+  totalForks: 15,
+  languages: [
+    { name: 'TypeScript', percent: 45 },
+    { name: 'Python', percent: 30 },
+    { name: 'Go', percent: 25 },
+  ],
+  topProject: {
+    name: 'NekoComics-Rework',
+    description: 'Phần Rework Tổng thể của NekoComics',
+    commits: 343, stars: 0, forks: 0,
+    language: 'Vue',
+    languages: [
+      { name: 'Vue', percent: 52 },
+      { name: 'TypeScript', percent: 34 },
+      { name: 'CSS', percent: 14 },
+    ],
+    url: `https://github.com/${ORG}`,
+  },
+  commitActivity: new Array(52).fill(0),
+  generatedAt: new Date().toISOString(),
+  isFallback: true,
+};
+
+function writeJson(data: object) {
+  mkdirSync(resolve('public'), { recursive: true });
+  writeFileSync(resolve('public/github-stats.json'), JSON.stringify(data, null, 2));
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
 async function main() {
-  const fallback = {
-    members: 6,
-    repos: 12,
-    privateRepos: 3,
-    publicRepos: 9,
-    totalStars: 47,
-    totalForks: 15,
-    languages: ['TypeScript', 'Python', 'Go'],
-    generatedAt: new Date().toISOString(),
-    isFallback: true,
-  };
+  if (!TOKEN) {
+    writeJson(FALLBACK);
+    console.log('[github-stats] Wrote fallback (no token).');
+    return;
+  }
 
   try {
-    const [org, repos, members] = await Promise.all([
-      fetchWithAuth(`https://api.github.com/orgs/${ORG}`),
-      fetchWithAuth(`https://api.github.com/orgs/${ORG}/repos?type=all&per_page=100`),
-      fetchWithAuth(`https://api.github.com/orgs/${ORG}/members?per_page=100`),
-    ]);
+    console.log('[github-stats] Fetching org data...');
 
-    const totalStars = (repos as any[]).reduce((acc: number, r: any) => acc + r.stargazers_count, 0);
-    const totalForks = (repos as any[]).reduce((acc: number, r: any) => acc + r.forks_count, 0);
+    // All repos (public + private) when token available, else public only
+    const repoType = process.env.GITHUB_TOKEN ? 'all' : 'public';
+    const repos = await paginate(`https://api.github.com/orgs/${ORG}/repos?type=${repoType}`);
+    console.log(`[github-stats] ${repos.length} repos (type=${repoType})`);
 
-    const langMap: Record<string, number> = {};
-    (repos as any[]).forEach((r: any) => {
-      if (r.language) langMap[r.language] = (langMap[r.language] ?? 0) + 1;
-    });
-    const languages = Object.entries(langMap)
+    // Org metadata — use auth for accurate private repo count
+    let org: any = {};
+    try { org = await (process.env.GITHUB_TOKEN ? fetchAuth : fetchPub)(`https://api.github.com/orgs/${ORG}`); } catch { /* ok */ }
+
+    // Members (requires org membership — graceful fallback)
+    let members: any[] = [];
+    try {
+      members = await fetchAuth(`https://api.github.com/orgs/${ORG}/members?per_page=100`) as any[];
+    } catch { console.warn('[github-stats] Could not fetch members.'); }
+
+    const totalStars = repos.reduce((s: number, r: any) => s + r.stargazers_count, 0);
+    const totalForks = repos.reduce((s: number, r: any) => s + r.forks_count, 0);
+
+    // Language breakdown
+    console.log('[github-stats] Fetching languages...');
+    const langBytes = await orgLanguages(repos);
+    const totalBytes = Object.values(langBytes).reduce((a, b) => a + b, 0);
+    const languages = Object.entries(langBytes)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([l]) => l);
+      .slice(0, 8)
+      .map(([name, b]) => ({
+        name,
+        percent: totalBytes > 0 ? Math.round((b / totalBytes) * 100) : 0,
+      }));
+
+    // Most-committed project
+    console.log('[github-stats] Fetching commit counts...');
+    const candidates = repos
+      .filter((r: any) => !r.fork)
+      .sort((a: any, b: any) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime())
+      .slice(0, 10);
+
+    const withCommits = await Promise.all(
+      candidates.map(async (r: any) => ({ ...r, commitCount: await repoCommitCount(r.name) }))
+    );
+    const topRepo = withCommits.sort((a, b) => b.commitCount - a.commitCount)[0];
+
+    // Fetch language breakdown for the top repo
+    let topRepoLangs: { name: string; percent: number }[] = [];
+    if (topRepo) {
+      try {
+        const fetcher = process.env.GITHUB_TOKEN ? fetchAuth : fetchPub;
+        const rawLangs = await fetcher(
+          `https://api.github.com/repos/${ORG}/${topRepo.name}/languages`
+        ) as Record<string, number>;
+        const totalLangBytes = Object.values(rawLangs).reduce((a, b) => a + b, 0);
+        topRepoLangs = Object.entries(rawLangs)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 6)
+          .map(([name, b]) => ({
+            name,
+            percent: totalLangBytes > 0 ? Math.round((b / totalLangBytes) * 100) : 0,
+          }));
+      } catch { /* skip */ }
+    }
+
+    const topProject = topRepo
+      ? {
+          name: topRepo.name,
+          description: topRepo.description ?? '',
+          commits: topRepo.commitCount,
+          stars: topRepo.stargazers_count,
+          forks: topRepo.forks_count,
+          language: topRepo.language ?? 'Unknown',
+          languages: topRepoLangs,
+          url: topRepo.html_url,
+        }
+      : FALLBACK.topProject;
+
+    // Commit activity (52 weeks)
+    console.log('[github-stats] Fetching commit activity...');
+    const commitActivity = await orgCommitActivity(repos);
 
     const stats = {
-      members: Array.isArray(members) ? members.length : (org as any).members_count ?? fallback.members,
-      repos: (org as any).public_repos + ((org as any).total_private_repos ?? 0),
-      privateRepos: (org as any).total_private_repos ?? 0,
-      publicRepos: (org as any).public_repos,
+      members: members.length > 0 ? members.length : (org.members_count ?? FALLBACK.members),
+      repos: repos.length,
+      privateRepos: org.total_private_repos ?? FALLBACK.privateRepos,
+      publicRepos: repos.length,
       totalStars,
       totalForks,
-      languages: languages.length ? languages : fallback.languages,
+      languages: languages.length ? languages : FALLBACK.languages,
+      topProject,
+      commitActivity,
       generatedAt: new Date().toISOString(),
       isFallback: false,
     };
 
-    mkdirSync(resolve('public'), { recursive: true });
-    writeFileSync(resolve('public/github-stats.json'), JSON.stringify(stats, null, 2));
-    console.log('[github-stats] ✓ Written to public/github-stats.json', stats);
+    writeJson(stats);
+    console.log('[github-stats] ✓ public/github-stats.json written');
+    console.log(`  members:   ${stats.members}`);
+    console.log(`  repos:     ${stats.repos}`);
+    console.log(`  stars:     ${stats.totalStars}`);
+    console.log(`  top:       ${stats.topProject.name} (${stats.topProject.commits} commits)`);
+    console.log(`  languages: ${stats.languages.map((l: any) => `${l.name} ${l.percent}%`).join(', ')}`);
   } catch (err) {
-    console.error('[github-stats] Fetch failed, writing fallback:', err);
-    mkdirSync(resolve('public'), { recursive: true });
-    writeFileSync(resolve('public/github-stats.json'), JSON.stringify(fallback, null, 2));
+    console.error('[github-stats] Fatal error, writing fallback:', err);
+    writeJson(FALLBACK);
   }
 }
 
