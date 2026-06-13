@@ -24,7 +24,7 @@ export const TeamMembers: Member[] = [{
     '2022 - KET Certificate from Cambridge English',
     '2023 - PET Certificate from Cambridge English'
   ],
-  photo: akk1tocover.src,
+  photo: akk1tocover,
   xl: true,
   onboarding: 2020,
   experience: new Date().getFullYear() - 2020
@@ -67,7 +67,7 @@ export const TeamMembers: Member[] = [{
   certificates: [
     'ICPC ID: https://icpc.global/ICPCID/R6DQS7R6JEA2',
   ],
-  photo: tachicover.src,
+  photo: tachicover,
   xl: true,
   type: 'xl2',
   onboarding: 2020,
@@ -85,7 +85,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2022,
   experience: new Date().getFullYear() - 2020
 }, {
@@ -101,7 +101,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2022,
   experience: new Date().getFullYear() - 2020
 }, {
@@ -117,7 +117,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2023,
   experience: new Date().getFullYear() - 2020
 }, {
@@ -135,7 +135,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2023,
   experience: new Date().getFullYear() - 2020
 }, {
@@ -151,7 +151,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2021,
   xl: true,
   type: 'xl2',
@@ -175,7 +175,7 @@ export const TeamMembers: Member[] = [{
     '2022 - KET Certificate from Cambridge English',
     '2023 - PET Certificate from Cambridge English'
   ],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2023,
   experience: new Date().getFullYear() - 2020
 }, {
@@ -190,7 +190,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2023,
   experience: new Date().getFullYear() - 2020
 }, {
@@ -205,7 +205,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2023,
   experience: new Date().getFullYear() - 2020
 }, {
@@ -220,7 +220,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2022,
   experience: new Date().getFullYear() - 2020
 }, {
@@ -235,7 +235,7 @@ export const TeamMembers: Member[] = [{
   graduationYear: 2021,
   awards: [],
   certificates: [],
-  photo: img01.src,
+  photo: img01,
   onboarding: 2022,
   experience: new Date().getFullYear() - 2020
 }]
