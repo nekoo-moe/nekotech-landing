@@ -1,3 +1,12 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command   = "npm run fetch-stats && npm run build"
+  publish   = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA fallback — route mọi path về index.html
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200

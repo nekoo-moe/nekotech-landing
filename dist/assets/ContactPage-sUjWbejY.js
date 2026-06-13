@@ -1,0 +1,1 @@
+import{_ as e,o as c,c as t}from"./index-CZ0Y1mlr.js";const o={};function n(r,a){return c(),t("div")}const _=e(o,[["render",n]]);export{_ as default};
