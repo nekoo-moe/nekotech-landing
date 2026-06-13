@@ -23,6 +23,7 @@ const stats = ref<Stats | null>(null);
 const loading = ref(true);
 const sectionRef = ref<HTMLElement | null>(null);
 const isVisible = ref(false);
+const barVisible = ref(false); // triggers bar slide-in (delayed after isVisible)
 
 // GitHub language colors (brand-accurate, monochrome fallback for unknown)
 const LANG_COLORS: Record<string, string> = {
@@ -65,7 +66,14 @@ onMounted(async () => {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { isVisible.value = true; io.disconnect(); } });
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        isVisible.value = true;
+        // Bars animate after section fades in
+        setTimeout(() => { barVisible.value = true; }, 350);
+        io.disconnect();
+      }
+    });
   }, { threshold: 0.1 });
   if (sectionRef.value) io.observe(sectionRef.value);
 
@@ -166,7 +174,11 @@ onMounted(async () => {
             v-for="(week, i) in commitGrid"
             :key="i"
             class="org-stats__commit-cell"
-            :class="`org-stats__commit-cell--l${week.level}`"
+            :class="[
+              `org-stats__commit-cell--l${week.level}`,
+              { 'cell-animated': isVisible }
+            ]"
+            :style="isVisible ? { animationDelay: `${i * 8}ms` } : {}"
             :title="`${week.count} commits`"
             @mouseenter="hoveredWeek = { count: week.count, idx: i }"
             @mouseleave="hoveredWeek = null"
@@ -220,11 +232,13 @@ onMounted(async () => {
                 :aria-label="`Languages: ${stats.topProject.languages.map(l => `${l.name} ${l.percent}%`).join(', ')}`"
               >
                 <div
-                  v-for="lang in stats.topProject.languages"
+                  v-for="(lang, idx) in stats.topProject.languages"
                   :key="lang.name"
                   class="org-stats__lang-segment"
+                  :class="{ 'seg-animated': barVisible }"
                   :style="{
-                    width: `${lang.percent}%`,
+                    '--seg-target': `${lang.percent}%`,
+                    '--seg-delay': `${idx * 120}ms`,
                     background: LANG_COLORS[lang.name] ?? 'var(--muted)',
                   }"
                   :title="`${lang.name}: ${lang.percent}%`"
@@ -232,9 +246,11 @@ onMounted(async () => {
               </div>
               <div class="org-stats__top-lang-legend">
                 <span
-                  v-for="lang in stats.topProject.languages"
+                  v-for="(lang, idx) in stats.topProject.languages"
                   :key="lang.name"
                   class="org-stats__lang-item"
+                  :class="{ 'item-animated': barVisible }"
+                  :style="{ '--item-delay': `${idx * 80 + 300}ms` }"
                 >
                   <span
                     class="org-stats__lang-dot"
@@ -281,11 +297,13 @@ onMounted(async () => {
         <!-- Stacked bar -->
         <div class="org-stats__lang-bar" role="img" :aria-label="`Language breakdown: ${stats.languages.map(l => `${l.name} ${l.percent}%`).join(', ')}`">
           <div
-            v-for="lang in stats.languages"
+            v-for="(lang, idx) in stats.languages"
             :key="lang.name"
             class="org-stats__lang-segment"
+            :class="{ 'seg-animated': barVisible }"
             :style="{
-              width: `${lang.percent}%`,
+              '--seg-target': `${lang.percent}%`,
+              '--seg-delay': `${idx * 120}ms`,
               background: LANG_COLORS[lang.name] ?? 'var(--muted)',
             }"
             :title="`${lang.name}: ${lang.percent}%`"
@@ -295,9 +313,11 @@ onMounted(async () => {
         <!-- Legend -->
         <div class="org-stats__lang-legend">
           <span
-            v-for="lang in stats.languages"
+            v-for="(lang, idx) in stats.languages"
             :key="lang.name"
             class="org-stats__lang-item"
+            :class="{ 'item-animated': barVisible }"
+            :style="{ '--item-delay': `${idx * 80 + 300}ms` }"
           >
             <span
               class="org-stats__lang-dot"
@@ -442,9 +462,35 @@ onMounted(async () => {
   height: 12px;
   border-radius: 2px;
   cursor: pointer;
-  transition: opacity 150ms ease;
+  transform: scaleY(0.3);
+  opacity: 0;
+  transition:
+    transform 120ms ease,
+    filter 120ms ease,
+    opacity 120ms ease;
+  transform-origin: bottom center;
 }
-.org-stats__commit-cell:hover { opacity: 0.75; }
+
+/* Wave-in when visible */
+.org-stats__commit-cell.cell-animated {
+  animation: cell-pop-in 300ms var(--ease-out-quart) both;
+}
+
+@keyframes cell-pop-in {
+  from { transform: scaleY(0.2); opacity: 0; }
+  to   { transform: scaleY(1);   opacity: 1; }
+}
+
+.org-stats__commit-cell.cell-animated {
+  transform: scaleY(1);
+  opacity: 1;
+}
+
+/* Hover: taller + brighter */
+.org-stats__commit-cell:hover {
+  transform: scaleY(1.6) !important;
+  filter: brightness(1.5);
+}
 
 /* Level 0–4 intensity (monochrome) */
 .org-stats__commit-cell--l0 { background: var(--surface); }
@@ -637,10 +683,39 @@ onMounted(async () => {
 
 .org-stats__lang-segment {
   height: 100%;
-  min-width: 2px;
-  transition: filter 150ms ease;
+  min-width: 0;
+  width: 0;                  /* start collapsed */
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    filter 180ms ease,
+    box-shadow 180ms ease;
+  transform-origin: left center;
 }
-.org-stats__lang-segment:hover { filter: brightness(1.3); }
+
+/* Slide-in animation: width 0 → var(--seg-target) */
+.org-stats__lang-segment.seg-animated {
+  animation: seg-slide-in 700ms var(--ease-out-quart) both;
+  animation-delay: var(--seg-delay, 0ms);
+}
+
+@keyframes seg-slide-in {
+  from { width: 0; }
+  to   { width: var(--seg-target, 0%); }
+}
+
+/* After animation ends, keep final width */
+.org-stats__lang-segment.seg-animated {
+  width: var(--seg-target, 0%);
+}
+
+/* Hover: lift + glow */
+.org-stats__lang-segment:hover {
+  transform: scaleY(1.5);
+  filter: brightness(1.35) saturate(1.2);
+  z-index: 1;
+}
 
 .org-stats__lang-legend {
   display: flex;
@@ -654,7 +729,28 @@ onMounted(async () => {
   gap: var(--space-2);
   font-size: var(--text-sm);
   color: var(--muted);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: color 200ms ease;
 }
+
+.org-stats__lang-item.item-animated {
+  animation: item-fade-up 400ms var(--ease-out-quart) both;
+  animation-delay: var(--item-delay, 0ms);
+}
+
+@keyframes item-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.org-stats__lang-item.item-animated {
+  opacity: 1;
+  transform: none;
+}
+
+.org-stats__lang-item:hover { color: var(--ink-dim); }
+
 .org-stats__lang-dot {
   width: 8px;
   height: 8px;
