@@ -7,6 +7,7 @@ const en: Translation = {
     team: 'Team',
     story: 'About us',
     career: 'Our Project',
+    partners: 'Partners',
     contact: 'Contact'
   },
   hero: {
@@ -81,13 +82,13 @@ const en: Translation = {
         title: "Code and learn<br> With Passion",
         subtitle: "The beginning of NekoTech Foundation",
         p1: "Founded by akk1to in <strong>September 26, 2025</strong>. We began as a small Discord group with a single goal: recreating a manga reader. That initial project laid the foundation for the team we are today—a group of passionate developers building innovative tools and impressive digital experiences.",
-        p2: "Currently our team have six members: <strong>@undefiinedstate (akk1to)</strong>, <strong>@heiznerd_2008</strong>, <strong>@khoasoma</strong>, <strong>@maiminhdung</strong>, <strong>@phuocsium</strong> and <strong>@.valerieashtrooo</strong>"
+        p2: "Currently our core team have three members: <strong>@ssdarealest (alyosha)</strong>, <strong>@captainnhwuy (Heiznerd)</strong>, <strong>@maiminhdung</strong>."
       },
       slide2: {
         date: "DEC 18, 2025",
         title: "learn together. <br>grow together.",
         subtitle: "Our passion",
-        p1: "We are a collective of developers who have logged countless hours learning, coding, and working on our projects together. Today, we are building some \"awesome\" projects like <strong>NekoAI</strong>, <strong>NekoAnime</strong>, <strong>NekoComics</strong>, <strong>NekoGagage</strong>, and <strong>NekoGarage</strong>.",
+        p1: "We are a collective of developers who have logged countless hours learning, coding, and working on our projects together. Today, we are building <strong>NekoAI</strong>, <strong>NekoStream</strong>, <strong>NekoComics</strong>, <strong>Fujiwara</strong> and more.",
         p2: "Connect with a team of driven students to learn, work, and grow together. We believe that by constantly pushing our limits, we only get better.",
         p3: "<strong>Apply to join today:</strong> works.nekotech@proton.me"
       }
@@ -95,16 +96,22 @@ const en: Translation = {
   },
   careers: {
     title: 'Our Projects',
-    subtitle: 'Check out some cool project that we are working on below!',
+    subtitle: 'Check out the products we are shipping.',
     items: {
       nekoai: {
-        description: "NekoAI is a 2D AI Agent, inspired by Neuro-sama, build to help people do the job!"
+        description: "NekoAI is a 2D AI Agent, inspired by Neuro-sama, built to help people do the job!"
       },
       nekocomics: {
-        description: "NekoComics is a brand new manga reader, build to provide a better experience for users!"
+        description: "NekoComics is a brand new manga reader, built to provide the smoothest reading experience for users."
       },
-      nekoanime: {
-        description: "NekoAnime is a Vietnamese anime streaming platform, with ad-free experience!"
+      nekostream: {
+        description: "NekoStream is a Vietnamese streaming platform built for anime fans who are tired of ads, region locks, and terrible UI. Fast, clean, and community-first."
+      },
+      nekostreamCli: {
+        description: "NekoStream CLI — watch everything from your terminal. A no-nonsense command-line client for NekoStream, built for developers and power users who live in the shell."
+      },
+      fujiwara: {
+        description: "Fujiwara Shin is your org's personal Discord bot — built by NekoTech, shaped for you. Moderation, music, leveling, custom commands. Forget cookie-cutter bots. Fujiwara does exactly what your server needs, nothing else. We deploy, we maintain, you own it."
       }
     }
   },

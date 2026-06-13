@@ -15,6 +15,9 @@ onMounted(() => {
     touchMultiplier: 2,
   });
 
+  // Expose to window so other components can call lenis.scrollTo
+  (window as any).__lenis = lenisInstance;
+
   function raf(time: number) {
     lenisInstance?.raf(time);
     requestAnimationFrame(raf);
@@ -26,6 +29,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   lenisInstance?.destroy();
   lenisInstance = null;
+  delete (window as any).__lenis;
 });
 </script>
 

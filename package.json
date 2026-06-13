@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "fetch-stats": "npx tsx scripts/fetch-github-stats.ts",
+    "prebuild": "npm run fetch-stats",
     "build": "vite build",
     "preview": "vite preview"
   },

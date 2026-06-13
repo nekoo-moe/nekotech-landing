@@ -7,17 +7,21 @@ export const NavigationConfig = [{
   title: 'Services',
   url: '#services'
 }, {
-  key: 'team',
-  title: 'Team',
-  url: '#team'
-}, {
   key: 'story',
-  title: 'About us',
+  title: 'About',
   url: '#story'
 }, {
   key: 'career',
-  title: 'Our Project',
+  title: 'Projects',
   url: '#career'
+}, {
+  key: 'partners',
+  title: 'Partners',
+  url: '#partners'
+}, {
+  key: 'team',
+  title: 'Team',
+  url: '#team'
 }, {
   key: 'contact',
   title: 'Contact',

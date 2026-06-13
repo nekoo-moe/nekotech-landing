@@ -5,6 +5,7 @@ export interface Translation {
     team: string;
     story: string;
     career: string;
+    partners: string;
     contact: string;
   };
   hero: {
@@ -51,7 +52,9 @@ export interface Translation {
     items: {
       nekoai: { description: string; };
       nekocomics: { description: string; };
-      nekoanime: { description: string; };
+      nekostream: { description: string; };
+      nekostreamCli: { description: string; };
+      fujiwara: { description: string; };
     }
   };
   contact: {

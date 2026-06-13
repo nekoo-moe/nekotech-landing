@@ -7,6 +7,7 @@ const vi: Translation = {
     team: 'Đội ngũ',
     story: 'Về chúng tôi',
     career: 'Dự án',
+    partners: 'Đối tác',
     contact: 'Liên hệ'
   },
   hero: {
@@ -60,13 +61,13 @@ const vi: Translation = {
         title: "Khởi đầu<br> của chúng tôi",
         subtitle: "Sự khởi đầu của NekoTech Foundation",
         p1: "Được thành lập bởi akk1to vào ngày <strong>26 tháng 9 năm 2025</strong>. Chúng tôi bắt đầu từ một nhóm Discord nhỏ với một mục tiêu duy nhất: tái tạo một trình đọc truyện tranh. Dự án ban đầu đó đã đặt nền móng cho đội ngũ ngày nay—một tập thể những lập trình viên đam mê, xây dựng những công cụ đột phá và những trải nghiệm kỹ thuật số ấn tượng.",
-        p2: "Hiện tại, đội ngũ nòng cốt của chúng tôi gồm ba thành viên: <strong>@ssdarealest (alyosha)</strong>, <strong>@heiznerd_2008</strong>, <strong>@maiminhdung</strong>."
+        p2: "Hiện tại, đội ngũ nòng cốt của chúng tôi gồm ba thành viên: <strong>@ssdarealest (alyosha)</strong>, <strong>@captainnhwuy (Heiznerd)</strong>, <strong>@maiminhdung</strong>."
       },
       slide2: {
         date: "18 TH12, 2025",
         title: "Cùng học hỏi. <br>Cùng vươn xa.",
         subtitle: "Đam mê của chúng tôi",
-        p1: "Chúng tôi là một tập thể những nhà phát triển đã dành vô số giờ để học tập, lập trình và làm việc cùng nhau trên các dự án. Ngày nay, chúng tôi đang xây dựng những dự án \"tuyệt vời\" như <strong>NekoAI</strong>, <strong>NekoAnime</strong>, <strong>NekoComics</strong>, <strong>NekoGarage</strong>.",
+        p1: "Chúng tôi là một tập thể những nhà phát triển đã dành vô số giờ để học tập, lập trình và làm việc cùng nhau trên các dự án. Ngày nay, chúng tôi đang xây dựng <strong>NekoAI</strong>, <strong>NekoStream</strong>, <strong>NekoComics</strong>, <strong>Fujiwara</strong> và nhiều dự án khác.",
         p2: "Kết nối những sinh viên đầy nhiệt huyết để cùng học, cùng làm và cùng phát triển. Chúng tôi tin rằng bằng việc liên tục vượt qua giới hạn của bản thân, chúng tôi sẽ ngày càng hoàn thiện hơn.",
         p3: "<strong>Gia nhập cùng chúng tôi:</strong> works.nekotech@proton.me"
       }
@@ -74,7 +75,7 @@ const vi: Translation = {
   },
   careers: {
     title: 'Dự Án Nổi Bật',
-    subtitle: 'Khám phá những dự án thú vị mà chúng tôi đang thực hiện!',
+    subtitle: 'Khám phá những sản phẩm chúng tôi đang ship!',
     items: {
       nekoai: {
         description: "NekoAI là một Agent AI 2D, lấy cảm hứng từ Neuro-sama, được xây dựng để hỗ trợ công việc con người một cách hiệu quả!"
@@ -82,8 +83,14 @@ const vi: Translation = {
       nekocomics: {
         description: "NekoComics là trải nghiệm đọc manga hoàn toàn mới, được xây dựng để mang lại sự tiện lợi và mượt mà nhất cho người dùng!"
       },
-      nekoanime: {
-        description: "NekoAnime là nền tảng phát trực tuyến anime tại Việt Nam, mang đến trải nghiệm xem phim không quảng cáo!"
+      nekostream: {
+        description: "NekoStream là nền tảng phát trực tuyến dành cho fan anime Việt Nam — không quảng cáo, không region lock, giao diện sạch sẽ và tập trung vào cộng đồng."
+      },
+      nekostreamCli: {
+        description: "NekoStream CLI — xem phim ngay từ terminal. Một client dòng lệnh gọn gàng dành cho developer và power user sống trong shell."
+      },
+      fujiwara: {
+        description: "Fujiwara Shin là Discord bot cá nhân hóa của org bạn — được NekoTech xây dựng, được định hình theo nhu cầu của bạn. Moderation, nhạc, leveling, lệnh tùy chỉnh. Không phải bot cào màu. Fujiwara làm đúng thứ server của bạn cần. Chúng tôi deploy, chúng tôi maintain, bạn sở hữu."
       }
     }
   },
