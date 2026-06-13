@@ -178,3 +178,86 @@ p {
     scroll-behavior: auto !important;
   }
 }
+
+/* ═══════════════════════════════════════════
+   GLOBAL SCROLL REVEAL — large heading text
+   Add class="reveal-heading" to any section header.
+   JS in main.ts observes these automatically.
+   ═══════════════════════════════════════════ */
+
+/* ── Reveal heading wrapper ── */
+.reveal-heading h1,
+.reveal-heading h2,
+.reveal-heading h3 {
+  overflow: hidden;
+}
+
+/* Each heading line wraps in a <span.rh-line> added by the observer */
+.rh-line {
+  display: block;
+  overflow: hidden;
+}
+
+.rh-inner {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 700ms var(--ease-out-quart);
+}
+
+.reveal-heading.is-revealed .rh-inner {
+  transform: translateY(0);
+}
+
+/* Stagger each line */
+.rh-line:nth-child(1) .rh-inner { transition-delay: 0ms; }
+.rh-line:nth-child(2) .rh-inner { transition-delay: 80ms; }
+.rh-line:nth-child(3) .rh-inner { transition-delay: 160ms; }
+
+/* ── Subtext fade-up ── */
+.reveal-heading p,
+.reveal-heading .reveal-sub {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms var(--ease-out-quart) 300ms,
+              transform 600ms var(--ease-out-quart) 300ms;
+}
+
+.reveal-heading.is-revealed p,
+.reveal-heading.is-revealed .reveal-sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Eyebrow ── */
+.reveal-heading .partners__eyebrow,
+.reveal-heading [class*="eyebrow"] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms ease 0ms, transform 500ms ease 0ms;
+}
+
+.reveal-heading.is-revealed .partners__eyebrow,
+.reveal-heading.is-revealed [class*="eyebrow"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Simple fade-up for non-heading sections ── */
+.reveal-fade {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 600ms var(--ease-out-quart),
+              transform 600ms var(--ease-out-quart);
+}
+
+.reveal-fade.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rh-inner { transform: translateY(0) !important; transition: none !important; }
+  .reveal-heading p,
+  .reveal-heading .reveal-sub,
+  .reveal-fade { opacity: 1 !important; transform: none !important; transition: none !important; }
+}

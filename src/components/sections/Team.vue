@@ -64,7 +64,7 @@ onMounted(async () => {
 <template>
   <section id="team" class="team section">
     <div class="container">
-      <header class="team__header">
+      <header class="team__header reveal-heading">
         <h2 class="team__heading">The people building this.</h2>
         <p class="team__sub">Core team — shipping since 2025.</p>
       </header>

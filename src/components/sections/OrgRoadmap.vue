@@ -89,7 +89,7 @@ const animateLine = () => {
 <template>
   <section id="roadmap" class="roadmap section">
     <div class="container">
-      <header class="roadmap__header">
+      <header class="roadmap__header reveal-heading">
         <h2 class="roadmap__heading">Roadmap</h2>
         <p class="roadmap__sub">Where we're going, in order.</p>
       </header>

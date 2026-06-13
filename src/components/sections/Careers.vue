@@ -82,7 +82,7 @@ onMounted(async () => {
 <template>
   <section id="career" class="projects section">
     <div class="container">
-      <header class="projects__header">
+      <header class="projects__header reveal-heading">
         <h2 class="projects__heading">{{ t.careers.title }}</h2>
         <p class="projects__sub">{{ t.careers.subtitle }}</p>
       </header>
