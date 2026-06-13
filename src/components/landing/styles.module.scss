@@ -1,0 +1,225 @@
+.homeHero {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: black;
+  color: white;
+  background-size: 200px;
+  animation: scroll 100s linear infinite;
+  transition: all 400ms ease-in-out;
+  position: relative;
+
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
+  user-select: none;
+  /* Standard syntax */
+}
+
+.branding {
+  font-weight: 700;
+}
+
+.homeHeroMeta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.pickerSelected {
+  opacity: 1 !important;
+}
+
+.logoWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: appear 1000ms ease-in-out;
+}
+
+.icon {
+  cursor: pointer;
+  width: 140px;
+  height: auto;
+}
+
+
+.companyMeta {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.companyName {
+  font-weight: 700;
+  font-size: 1.254rem;
+  opacity: 0;
+  animation-name: companyName;
+  animation-duration: 1000ms;
+  animation-delay: 1000ms;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.slogan {
+  font-weight: 300; // Light/Thin per "simply advanced" vibe? Or standard 400. Let's go with 300 or 400. "simply advanced" implies sleek.
+  font-size: 1rem;
+  opacity: 0;
+  animation-name: companyName;
+  animation-duration: 1000ms;
+  animation-delay: 1500ms;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  color: inherit; // Use parent color
+  margin-top: 0.2rem;
+  text-align: center;
+  width: 100%;
+}
+
+.studioPart {
+  max-width: 0;
+  cursor: pointer;
+  overflow: hidden;
+  animation-name: revealStudio;
+  animation-duration: 500ms;
+  animation-delay: 2000ms;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.companyKeyPoints {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 300;
+  font-size: .924rem;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  div {
+    display: block;
+    width: 6rem;
+    text-align: center;
+    cursor: pointer;
+    padding: .32rem 0;
+    border-radius: 66px;
+    opacity: 1;
+    transition: background-color 400ms ease-in-out;
+
+    &:hover,
+    &.active {
+      opacity: 1;
+    }
+  }
+
+}
+
+
+
+
+
+
+@keyframes scroll {
+  100% {
+    background-position: 2300px -3000px;
+  }
+}
+
+@media (prefers-reduced-motion) {
+  .wrapper {
+    animation: scroll 800s linear infinite;
+  }
+}
+
+@media (min-width: 670px) {
+  .title {
+    font-size: 5rem;
+  }
+}
+
+
+@keyframes appear {
+  from {
+    margin-bottom: -500px;
+    opacity: 0;
+  }
+
+  to {
+    margin-bottom: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes companyName {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes revealStudio {
+  from {
+    max-width: 0;
+  }
+
+  to {
+    max-width: 6rem;
+  }
+}
+
+
+@keyframes spaceBoost {
+  0% {
+    transform: translate(2px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(0px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(2px, 1px) rotate(-1deg);
+  }
+
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+
+  90% {
+    transform: translate(2px, 2px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}

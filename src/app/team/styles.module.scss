@@ -1,0 +1,123 @@
+.outer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem 1rem;
+
+  .content {
+    max-width: 1200px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 960px) {
+  .teamContainer {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-rows: 40vh !important;
+
+    .member {
+      grid-column-end: span 1 !important;
+      grid-row-end: span 1 !important;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .teamContainer {
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
+}
+
+
+.teamContainer {
+  margin-top: 6rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  grid-auto-rows: 300px;
+
+  .member {
+    // background-image: url(https://www.hindustantimes.com/ht-img/img/2023/07/16/1600x900/Oppenheimer_christopher_nolan_1689495141477_1689495141692.jpg); // change modal background here
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    filter: grayscale(1);
+    -webkit-filter: grayscale(1);
+    transition: all 400ms ease-in-out;
+    cursor: pointer;
+    position: relative;
+
+    &:hover {
+      transform: scale(1.03);
+      filter: grayscale(0);
+      background-size: cover;
+
+      .experience {
+        opacity: 1;
+        font-size: 1rem;
+        bottom: 1rem;
+
+        span {
+          font-size: 1rem;
+        }
+      }
+
+      .name {
+        opacity: 1;
+      }
+    }
+
+    .experience {
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      opacity: .6;
+      transition: all 400ms ease-in-out;
+
+      span {
+        transition: all 400ms ease-in-out;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .xl {
+    grid-column-end: span 2;
+    grid-row-end: span 1;
+
+    .experience {
+      font-size: 4rem;
+
+      span {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .xl2 {
+    grid-column-end: span 1;
+    grid-row-end: span 2;
+
+    .experience {
+      font-size: 4rem;
+
+      span {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .name {
+    position: absolute;
+    opacity: 0;
+    left: 1rem;
+    top: 1rem;
+    font-size: 2rem;
+    transition: all 400ms ease-in-out;
+    color: white;
+    font-weight: 700;
+  }
+}

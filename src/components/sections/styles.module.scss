@@ -1,0 +1,56 @@
+.teamSection {
+    padding: 6rem 2rem;
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    text-align: left;
+    margin-bottom: 3rem;
+    width: 100%;
+    max-width: 1400px;
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #a1a1aa;
+    font-weight: 300;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5rem 2rem;
+    width: 100%;
+    max-width: 1400px;
+    justify-items: center;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+.servicesSection {
+    padding: 6rem 2rem;
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}

@@ -1,0 +1,46 @@
+.wrapper {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    .shadow {
+      top: -2rem;
+    }
+  }
+}
+
+.title {
+  font-size: 4rem;
+  line-height: 5rem;
+  font-weight: 700;
+}
+
+.shadow {
+  font-size: 4rem;
+  font-weight: 800;
+  width: 100%;
+  position: absolute;
+  line-height: 4rem;
+  opacity: .1;
+  left: -1rem;
+  top: -2.6rem;
+  transition: all 400ms ease-out;
+  transform: scale(1.8);
+  transform-origin: top left;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (max-width: 1080px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .shadow {
+    font-size: 2rem;
+    left: -.5rem;
+    top: -1.3rem;
+  }
+}
