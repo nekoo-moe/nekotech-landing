@@ -9,12 +9,10 @@ import Partners from '@/components/sections/Partners.vue';
 import Team from '@/components/sections/Team.vue';
 import Careers from '@/components/sections/Careers.vue';
 import OpenSourceCTA from '@/components/sections/OpenSourceCTA.vue';
-import InteractiveGrid from '@/components/vue-bits/InteractiveGrid.vue';
 </script>
 
 <template>
   <main>
-    <InteractiveGrid />
     <AppHeader />
     <HomeHero />
     <OrgStats />
