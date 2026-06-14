@@ -12,6 +12,17 @@ onMounted(() => {
 
 <template>
   <section id="contact" class="oss-cta" ref="sectionRef">
+    <!-- Spline Background Embed -->
+    <div class="oss-cta__spline-container">
+      <iframe
+        src="https://my.spline.design/boxeshover-eYsbgQY8qSdxM1aELBeGb1P4/"
+        frameborder="0"
+        class="oss-cta__spline-iframe"
+        title="NekoTech Contact Section Spline Scene"
+      ></iframe>
+      <div class="oss-cta__spline-overlay" aria-hidden="true"></div>
+    </div>
+
     <div class="container">
       <div class="oss-cta__body">
         <h2 class="oss-cta__heading">
@@ -63,18 +74,55 @@ onMounted(() => {
 
 <style scoped>
 .oss-cta {
-  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+  background: transparent;
   border-top: 1px solid var(--border);
   padding-block: clamp(4rem, 10vw, 8rem);
 }
 
 .oss-cta .container {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
 }
 
+/* ── Spline Background ── */
+.oss-cta__spline-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.oss-cta__spline-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.oss-cta__spline-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--bg) 0%, transparent 15%, transparent 85%, var(--bg) 100%),
+              linear-gradient(to right, var(--bg) 0%, transparent 20%, transparent 80%, var(--bg) 100%);
+  pointer-events: none;
+}
+
 /* ── Heading ── */
+.oss-cta__body {
+  pointer-events: none;
+}
+
 .oss-cta__heading {
   font-size: var(--text-hero);
   font-weight: 800;
@@ -96,6 +144,7 @@ onMounted(() => {
   align-items: center;
   gap: var(--space-8);
   flex-wrap: wrap;
+  pointer-events: none;
 }
 
 .oss-cta__link {
@@ -107,6 +156,7 @@ onMounted(() => {
   color: var(--ink);
   border-bottom: 1px solid var(--border);
   padding-bottom: 2px;
+  pointer-events: auto;
   transition: border-color var(--duration-fast) ease,
               color var(--duration-fast) ease;
 }

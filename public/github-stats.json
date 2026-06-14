@@ -1,47 +1,27 @@
 {
-  "members": 5,
-  "repos": 37,
-  "privateRepos": 29,
-  "publicRepos": 37,
-  "totalStars": 1,
-  "totalForks": 1,
+  "members": 6,
+  "repos": 12,
+  "privateRepos": 3,
+  "publicRepos": 9,
+  "totalStars": 47,
+  "totalForks": 15,
   "languages": [
     {
-      "name": "Rust",
-      "percent": 25
-    },
-    {
-      "name": "Vue",
-      "percent": 18
-    },
-    {
       "name": "TypeScript",
-      "percent": 16
-    },
-    {
-      "name": "JavaScript",
-      "percent": 12
+      "percent": 45
     },
     {
       "name": "Python",
-      "percent": 7
+      "percent": 30
     },
     {
-      "name": "HTML",
-      "percent": 5
-    },
-    {
-      "name": "Java",
-      "percent": 3
-    },
-    {
-      "name": "C#",
-      "percent": 3
+      "name": "Go",
+      "percent": 25
     }
   ],
   "topProject": {
     "name": "NekoComics-Rework",
-    "description": "Phần Rework Tổng thể của NekoComics ",
+    "description": "Phần Rework Tổng thể của NekoComics",
     "commits": 343,
     "stars": 0,
     "forks": 0,
@@ -49,30 +29,18 @@
     "languages": [
       {
         "name": "Vue",
-        "percent": 71
-      },
-      {
-        "name": "Ruby",
-        "percent": 18
-      },
-      {
-        "name": "JavaScript",
-        "percent": 6
+        "percent": 52
       },
       {
         "name": "TypeScript",
-        "percent": 2
+        "percent": 34
       },
       {
         "name": "CSS",
-        "percent": 2
-      },
-      {
-        "name": "HTML",
-        "percent": 0
+        "percent": 14
       }
     ],
-    "url": "https://github.com/nekoo-moe/NekoComics-Rework"
+    "url": "https://github.com/nekoo-moe"
   },
   "commitActivity": [
     0,
@@ -99,35 +67,35 @@
     0,
     0,
     0,
-    59,
-    8,
-    4,
-    23,
-    2,
-    4,
-    38,
-    2,
-    4,
-    15,
-    12,
-    57,
-    21,
-    10,
-    10,
-    13,
-    9,
-    27,
-    3,
-    2,
-    16,
-    13,
-    22,
-    17,
-    24,
-    15,
-    27,
-    12
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
   ],
-  "generatedAt": "2026-06-13T11:02:51.078Z",
-  "isFallback": false
+  "generatedAt": "2026-06-14T13:07:08.085Z",
+  "isFallback": true
 }
