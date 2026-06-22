@@ -21,14 +21,6 @@ const projects = computed(() => [
     tag: 'AI · 2D Agent',
   },
   {
-    id: 'nekocomics',
-    title: 'NekoComics',
-    description: t.value.careers.items.nekocomics.description,
-    status: 'development' as const,
-    featured: false,
-    tag: 'Web · Mobile',
-  },
-  {
     id: 'nekostream',
     title: 'NekoStream',
     description: t.value.careers.items.nekostream.description,

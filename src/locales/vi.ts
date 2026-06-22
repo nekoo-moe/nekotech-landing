@@ -81,7 +81,7 @@ const vi: Translation = {
         description: "NekoAI là một Agent AI 2D, lấy cảm hứng từ Neuro-sama, được xây dựng để hỗ trợ công việc con người một cách hiệu quả!"
       },
       nekocomics: {
-        description: "NekoComics là trải nghiệm đọc manga hoàn toàn mới, được xây dựng để mang lại sự tiện lợi và mượt mà nhất cho người dùng!"
+        description: ""
       },
       nekostream: {
         description: "NekoStream là nền tảng phát trực tuyến dành cho fan anime Việt Nam — không quảng cáo, không region lock, giao diện sạch sẽ và tập trung vào cộng đồng."

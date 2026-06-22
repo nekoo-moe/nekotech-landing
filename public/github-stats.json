@@ -1,46 +1,78 @@
 {
-  "members": 6,
-  "repos": 12,
-  "privateRepos": 3,
-  "publicRepos": 9,
-  "totalStars": 47,
-  "totalForks": 15,
+  "members": 5,
+  "repos": 37,
+  "privateRepos": 29,
+  "publicRepos": 37,
+  "totalStars": 1,
+  "totalForks": 1,
   "languages": [
     {
+      "name": "Rust",
+      "percent": 25
+    },
+    {
+      "name": "Vue",
+      "percent": 18
+    },
+    {
       "name": "TypeScript",
-      "percent": 45
+      "percent": 16
+    },
+    {
+      "name": "JavaScript",
+      "percent": 12
     },
     {
       "name": "Python",
-      "percent": 30
+      "percent": 7
     },
     {
-      "name": "Go",
-      "percent": 25
+      "name": "HTML",
+      "percent": 5
+    },
+    {
+      "name": "Java",
+      "percent": 3
+    },
+    {
+      "name": "C#",
+      "percent": 3
     }
   ],
   "topProject": {
     "name": "NekoComics-Rework",
-    "description": "Phần Rework Tổng thể của NekoComics",
-    "commits": 343,
+    "description": "Phần Rework Tổng thể của NekoComics ",
+    "commits": 345,
     "stars": 0,
     "forks": 0,
     "language": "Vue",
     "languages": [
       {
         "name": "Vue",
-        "percent": 52
+        "percent": 71
+      },
+      {
+        "name": "Ruby",
+        "percent": 18
+      },
+      {
+        "name": "JavaScript",
+        "percent": 6
       },
       {
         "name": "TypeScript",
-        "percent": 34
+        "percent": 2
       },
       {
         "name": "CSS",
-        "percent": 14
+        "percent": 2
+      },
+      {
+        "name": "HTML",
+        "percent": 0
       }
     ],
-    "url": "https://github.com/nekoo-moe"
+    "url": "https://github.com/nekoo-moe/NekoComics-Rework"
   },
   "commitActivity": [
     0,
@@ -66,36 +98,36 @@
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    7,
+    56,
+    4,
+    4,
+    24,
+    1,
+    6,
+    37,
+    1,
+    4,
+    17,
+    22,
+    45,
+    23,
+    8,
+    14,
+    9,
+    9,
+    29,
+    1,
+    2,
+    16,
+    13,
+    30,
+    19,
+    16,
+    20,
+    28,
+    14
   ],
-  "generatedAt": "2026-06-14T13:37:49.974Z",
-  "isFallback": true
+  "generatedAt": "2026-06-14T13:45:43.661Z",
+  "isFallback": false
 }
