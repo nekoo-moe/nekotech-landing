@@ -147,14 +147,13 @@ const FALLBACK = {
     { name: 'Go', percent: 25 },
   ],
   topProject: {
-    name: 'NekoComics-Rework',
-    description: 'Phần Rework Tổng thể của NekoComics',
-    commits: 343, stars: 0, forks: 0,
-    language: 'Vue',
+    name: 'NekoAI',
+    description: '2D AI Agent powered by custom LLM orchestration',
+    commits: 154, stars: 0, forks: 0,
+    language: 'TypeScript',
     languages: [
-      { name: 'Vue', percent: 52 },
-      { name: 'TypeScript', percent: 34 },
-      { name: 'CSS', percent: 14 },
+      { name: 'TypeScript', percent: 80 },
+      { name: 'Vue', percent: 20 },
     ],
     url: `https://github.com/${ORG}`,
   },
@@ -212,7 +211,7 @@ async function main() {
     // Most-committed project
     console.log('[github-stats] Fetching commit counts...');
     const candidates = repos
-      .filter((r: any) => !r.fork)
+      .filter((r: any) => !r.fork && !r.name.toLowerCase().includes('nekocomics'))
       .sort((a: any, b: any) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime())
       .slice(0, 10);
 

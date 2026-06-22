@@ -6,16 +6,10 @@ const lineRef = ref<HTMLElement | null>(null);
 
 const phases = [
   {
-    label: 'Q2 2026',
-    title: 'NekoComics Reborn',
-    description: 'Full rewrite of NekoComics with better performance, chapter navigation, and bookmark sync.',
-    status: 'current' as const,
-  },
-  {
     label: 'Q3 2026',
     title: 'NekoAI Beta',
     description: 'Public beta of our 2D AI Agent. Open for community testing and feedback.',
-    status: 'upcoming' as const,
+    status: 'current' as const,
   },
   {
     label: 'Q4 2026',
@@ -144,7 +138,7 @@ const animateLine = () => {
 .roadmap__track {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0;
 }
 
@@ -165,7 +159,7 @@ const animateLine = () => {
   transform-origin: left;
   transform: scaleX(var(--progress, 0));
   transition: transform 0.1s linear;
-  width: calc(1 / 4 * 100%); /* stops at current phase */
+  width: calc(1 / 3 * 100%); /* stops at current phase */
 }
 
 /* ── Phase card ── */

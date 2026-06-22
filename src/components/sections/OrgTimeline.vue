@@ -20,7 +20,7 @@ const milestones = [
   {
     date: 'DEC 18, 2025',
     title: 'First Projects Ship',
-    body: 'NekoComics, NekoBuckets, and NekoMusics go live. The org grows from a Discord group into a team building real products used by real people.',
+    body: 'NekoBuckets and NekoMusics go live. The org grows from a Discord group into a team building real products used by real people.',
     accent: false,
     image: null,
     imageAlt: '',

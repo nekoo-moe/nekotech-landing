@@ -31,22 +31,6 @@ const projects = computed(() => [
         type: 'primary' as const
       }
     ]
-  },
-  {
-    title: "NekoComics Legacy",
-    description: t.value.sideProjects.items.nekocomicsLegacy.description,
-    actions: [
-      {
-        label: t.value.sideProjects.actions.viewFrontend,
-        url: "https://github.com/NekoTech-Foundation/NekoComics-FE",
-        type: 'github' as const
-      },
-      {
-        label: t.value.sideProjects.actions.viewBackend,
-        url: "https://github.com/NekoTech-Foundation/NekoComics-BE",
-        type: 'github' as const
-      }
-    ]
   }
 ]);
 </script>

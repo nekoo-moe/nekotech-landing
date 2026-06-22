@@ -51,7 +51,6 @@ export interface Translation {
     subtitle: string;
     items: {
       nekoai: { description: string; };
-      nekocomics: { description: string; };
       nekostream: { description: string; };
       nekostreamCli: { description: string; };
       fujiwara: { description: string; };
@@ -78,9 +77,6 @@ export interface Translation {
         description: string;
       };
       nekomusics: {
-        description: string;
-      };
-      nekocomicsLegacy: {
         description: string;
       };
     };

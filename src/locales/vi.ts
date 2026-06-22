@@ -67,7 +67,7 @@ const vi: Translation = {
         date: "18 TH12, 2025",
         title: "Cùng học hỏi. <br>Cùng vươn xa.",
         subtitle: "Đam mê của chúng tôi",
-        p1: "Chúng tôi là một tập thể những nhà phát triển đã dành vô số giờ để học tập, lập trình và làm việc cùng nhau trên các dự án. Ngày nay, chúng tôi đang xây dựng <strong>NekoAI</strong>, <strong>NekoStream</strong>, <strong>NekoComics</strong>, <strong>Fujiwara</strong> và nhiều dự án khác.",
+        p1: "Chúng tôi là một tập thể những nhà phát triển đã dành vô số giờ để học tập, lập trình và làm việc cùng nhau trên các dự án. Ngày nay, chúng tôi đang xây dựng <strong>NekoAI</strong>, <strong>NekoStream</strong>, <strong>Fujiwara</strong> và nhiều dự án khác.",
         p2: "Kết nối những sinh viên đầy nhiệt huyết để cùng học, cùng làm và cùng phát triển. Chúng tôi tin rằng bằng việc liên tục vượt qua giới hạn của bản thân, chúng tôi sẽ ngày càng hoàn thiện hơn.",
         p3: "<strong>Gia nhập cùng chúng tôi:</strong> works.nekotech@proton.me"
       }
@@ -79,9 +79,6 @@ const vi: Translation = {
     items: {
       nekoai: {
         description: "NekoAI là một Agent AI 2D, lấy cảm hứng từ Neuro-sama, được xây dựng để hỗ trợ công việc con người một cách hiệu quả!"
-      },
-      nekocomics: {
-        description: ""
       },
       nekostream: {
         description: "NekoStream là nền tảng phát trực tuyến dành cho fan anime Việt Nam — không quảng cáo, không region lock, giao diện sạch sẽ và tập trung vào cộng đồng."
@@ -116,9 +113,6 @@ const vi: Translation = {
       },
       nekomusics: {
         description: "NekoMusics - Dự án mã nguồn mở kiến tạo bởi Heiznerd. Mang cả thế giới âm nhạc sống động trực tiếp tới máy chủ Discord của bạn với chất lượng cao nhất."
-      },
-      nekocomicsLegacy: {
-        description: "NekoComics Legacy - Dấu ấn khởi đầu của NekoTech Foundation. Phiên bản này hiện đã được lưu trữ để nhường chỗ cho sự tái sinh mạnh mẽ hơn - NekoComics Reborn."
       }
     },
     actions: {

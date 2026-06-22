@@ -61,9 +61,6 @@ const en: Translation = {
       },
       nekomusics: {
         description: "NekoMusics - An open-source project by Heiznerd. Bringing a vivid world of high-quality music directly to your Discord server."
-      },
-      nekocomicsLegacy: {
-        description: "NekoComics Legacy - The inception mark of NekoTech Foundation. This version is archived to pave the way for a stronger rebirth - NekoComics Reborn."
       }
     },
     actions: {
@@ -88,7 +85,7 @@ const en: Translation = {
         date: "DEC 18, 2025",
         title: "learn together. <br>grow together.",
         subtitle: "Our passion",
-        p1: "We are a collective of developers who have logged countless hours learning, coding, and working on our projects together. Today, we are building <strong>NekoAI</strong>, <strong>NekoStream</strong>, <strong>NekoComics</strong>, <strong>Fujiwara</strong> and more.",
+        p1: "We are a collective of developers who have logged countless hours learning, coding, and working on our projects together. Today, we are building <strong>NekoAI</strong>, <strong>NekoStream</strong>, <strong>Fujiwara</strong> and more.",
         p2: "Connect with a team of driven students to learn, work, and grow together. We believe that by constantly pushing our limits, we only get better.",
         p3: "<strong>Apply to join today:</strong> works.nekotech@proton.me"
       }
@@ -100,9 +97,6 @@ const en: Translation = {
     items: {
       nekoai: {
         description: "NekoAI is a 2D AI Agent, inspired by Neuro-sama, built to help people do the job!"
-      },
-      nekocomics: {
-        description: "NekoComics is a brand new manga reader, built to provide the smoothest reading experience for users."
       },
       nekostream: {
         description: "NekoStream is a Vietnamese streaming platform built for anime fans who are tired of ads, region locks, and terrible UI. Fast, clean, and community-first."

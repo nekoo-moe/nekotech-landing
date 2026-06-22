@@ -1,26 +1,26 @@
 {
-  "members": 5,
-  "repos": 37,
-  "privateRepos": 29,
-  "publicRepos": 37,
-  "totalStars": 1,
+  "members": 6,
+  "repos": 40,
+  "privateRepos": 32,
+  "publicRepos": 40,
+  "totalStars": 2,
   "totalForks": 1,
   "languages": [
     {
+      "name": "JavaScript",
+      "percent": 28
+    },
+    {
       "name": "Rust",
-      "percent": 25
+      "percent": 24
     },
     {
       "name": "Vue",
-      "percent": 18
+      "percent": 11
     },
     {
       "name": "TypeScript",
-      "percent": 16
-    },
-    {
-      "name": "JavaScript",
-      "percent": 12
+      "percent": 10
     },
     {
       "name": "Python",
@@ -28,7 +28,7 @@
     },
     {
       "name": "HTML",
-      "percent": 5
+      "percent": 4
     },
     {
       "name": "Java",
@@ -40,39 +40,31 @@
     }
   ],
   "topProject": {
-    "name": "NekoComics-Rework",
-    "description": "Phần Rework Tổng thể của NekoComics ",
-    "commits": 345,
+    "name": "NekoStream-CLI",
+    "description": "",
+    "commits": 29,
     "stars": 0,
     "forks": 0,
-    "language": "Vue",
+    "language": "TypeScript",
     "languages": [
       {
-        "name": "Vue",
-        "percent": 71
-      },
-      {
-        "name": "Ruby",
-        "percent": 18
+        "name": "TypeScript",
+        "percent": 82
       },
       {
         "name": "JavaScript",
-        "percent": 6
-      },
-      {
-        "name": "TypeScript",
-        "percent": 2
-      },
-      {
-        "name": "CSS",
-        "percent": 2
+        "percent": 12
       },
       {
         "name": "HTML",
-        "percent": 0
+        "percent": 5
+      },
+      {
+        "name": "CSS",
+        "percent": 1
       }
     ],
-    "url": "https://github.com/nekoo-moe/NekoComics-Rework"
+    "url": "https://github.com/nekoo-moe/NekoStream-CLI"
   },
   "commitActivity": [
     0,
@@ -97,37 +89,37 @@
     0,
     0,
     0,
-    0,
-    7,
-    56,
-    4,
-    4,
-    24,
-    1,
-    6,
-    37,
-    1,
-    4,
-    17,
-    22,
-    45,
     23,
-    8,
-    14,
-    9,
-    9,
-    29,
+    41,
+    4,
+    3,
+    25,
     1,
-    2,
-    16,
-    13,
-    30,
+    8,
+    34,
+    1,
+    4,
+    21,
+    32,
+    31,
+    29,
+    4,
     19,
-    16,
-    20,
-    28,
-    14
+    4,
+    10,
+    26,
+    2,
+    3,
+    18,
+    9,
+    30,
+    25,
+    12,
+    13,
+    25,
+    21,
+    42
   ],
-  "generatedAt": "2026-06-14T13:45:43.661Z",
+  "generatedAt": "2026-06-22T13:02:00.420Z",
   "isFallback": false
 }

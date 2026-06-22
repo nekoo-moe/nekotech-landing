@@ -10,7 +10,7 @@ Developers, tech-curious builders, và cộng đồng open-source tại Việt N
 
 ## Product Purpose
 
-Landing page chính thức của NekoTech Foundation — một tổ chức (org) developer trẻ, open-source, đang xây dựng một hệ sinh thái sản phẩm công nghệ (NekoAI, NekoComics, NekoAnime, v.v.). Website phải truyền đạt được sự nghiêm túc và năng lực của org, showcase hành trình và roadmap, đồng thời thu hút developer mới join community.
+Landing page chính thức của NekoTech Foundation — một tổ chức (org) developer trẻ, open-source, đang xây dựng một hệ sinh thái sản phẩm công nghệ (NekoAI, NekoAnime, v.v.). Website phải truyền đạt được sự nghiêm túc và năng lực của org, showcase hành trình và roadmap, đồng thời thu hút developer mới join community.
 
 ## Brand Personality
 

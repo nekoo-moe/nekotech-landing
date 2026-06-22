@@ -29,15 +29,7 @@ const { t } = useLanguage();
               <Github />
               <span>GitHub</span>
             </a>
-            <a
-              href="https://www.facebook.com/nekocomics.xyz"
-              target="_blank"
-              rel="noopener noreferrer"
-              :class="styles.socialLink"
-            >
-              <Facebook />
-              <span>Facebook</span>
-            </a>
+
             <a
               href="https://discord.gg/uP6EJQxQg5"
               target="_blank"
