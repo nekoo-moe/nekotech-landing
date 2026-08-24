@@ -1,56 +1,441 @@
 <script setup lang="ts">
-import styles from './Contact.module.scss';
-import SectionTitle from '@/components/shared/SectionTitle.vue';
-import ScrollReveal from '@/components/utils/ScrollReveal.vue';
-import { Github, Facebook } from 'lucide-vue-next';
+/**
+ * Contact — the closing plate.
+ *
+ * This replaces `OpenSourceCTA.vue`, which embedded a Spline iframe
+ * (`boxeshover-…`) as its background. `SignalField` is the local replacement:
+ * same role, no third-party frame, no watermark, and it stops rendering when
+ * scrolled out of view.
+ *
+ * The footer lives here rather than in its own component because it shares
+ * this section's background canvas — splitting them would mean two stacking
+ * contexts fighting over one gradient. That shared canvas is also what the
+ * footer's closing wordmark is for: the type is knocked out to transparent so
+ * the moving lattice reads *through* the letterforms. It is the last thing on
+ * the page, so it is the one place a large gesture costs nothing that follows.
+ */
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useLanguage } from '@/components/providers/LanguageProvider.vue';
+import { NAV, ORG, SITE_REPO } from '@/configs/app.config';
+import { scrollToHash } from '@/composables/useSectionNav';
+import { useScrollProgress } from '@/composables/useScrollProgress';
+import { prefersReducedMotion } from '@/composables/useCanvasScene';
+import SignalField from '@/components/three/SignalField.vue';
 
 const { t } = useLanguage();
+
+const channels = [
+  { key: 'github' as const, href: ORG.github, value: ORG.github.replace('https://', '') },
+  { key: 'discord' as const, href: ORG.discord, value: ORG.discord.replace('https://', '') },
+];
+
+const year = new Date().getFullYear();
+
+/* The wordmark rises and settles as the footer is reached — the payoff for
+   scrolling the whole page. */
+const footer = ref<HTMLElement | null>(null);
+useScrollProgress(footer, { start: 1, end: 0.72 });
+
+/**
+ * A running clock in the footer. It is the cheapest possible proof that the
+ * page is live rather than a screenshot, and it costs one interval.
+ */
+const clock = ref('');
+let timer = 0;
+
+const tickClock = () => {
+  clock.value = new Intl.DateTimeFormat('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'Asia/Ho_Chi_Minh',
+    hour12: false,
+  }).format(new Date());
+};
+
+onMounted(() => {
+  tickClock();
+  // Reduced motion means no second-by-second flicker; the time still shows.
+  if (!prefersReducedMotion()) timer = window.setInterval(tickClock, 1000);
+});
+
+onBeforeUnmount(() => { if (timer) clearInterval(timer); });
 </script>
 
 <template>
-  <section id="contact" :class="styles.contactSection">
-    <ScrollReveal :className="styles.sectionContent">
-      <div :class="styles.splitLayout">
-        <div :class="styles.leftColumn">
-          <SectionTitle>{{ t.contact.title }}</SectionTitle>
+  <section id="contact" class="ct" aria-labelledby="ct-heading">
+    <div class="ct__stage" aria-hidden="true">
+      <SignalField />
+      <div class="ct__veil"></div>
+    </div>
 
-          <p :class="styles.intro">
-            {{ t.contact.description }}
-          </p>
+    <div class="ct__inner container">
+      <p class="label label--accent" data-reveal>{{ t.contact.label }}</p>
 
-          <div :class="styles.links">
-            <a
-              href="https://github.com/NekoTech-Foundation"
-              target="_blank"
-              rel="noopener noreferrer"
-              :class="styles.socialLink"
-            >
-              <Github />
-              <span>GitHub</span>
-            </a>
+      <h2 id="ct-heading" class="ct__heading" data-reveal="mask">
+        <span v-for="(line, i) in t.contact.heading" :key="i" class="line">
+          <span>{{ line }}</span>
+        </span>
+      </h2>
 
-            <a
-              href="https://discord.gg/uP6EJQxQg5"
-              target="_blank"
-              rel="noopener noreferrer"
-              :class="styles.socialLink"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="24" height="24" fill="currentColor">
-                <path d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1 .1s-.6 .4-.8 .8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2c-41.3 7.1-81.6 19.6-119.7 37.1-.3 .1-.6 .4-.8 .7-76.2 113.8-97.1 224.9-86.9 334.5 0 .3 .1 .5 .2 .8s.3 .4 .5 .6c44.4 32.9 94 58 146.8 74.2 .4 .1 .8 .1 1.1 0s.7-.4 .9-.7c11.3-15.4 21.4-31.8 30-48.8 .1-.2 .2-.5 .2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6 .2-.9 .3-.5 .6-.7c3.1-2.3 6.2-4.7 9.1-7.1 .3-.2 .6-.4 .9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1 .7-.2 1-.2s.7 .2 .9 .4c2.9 2.4 6 4.9 9.1 7.2 .2 .2 .4 .4 .6 .7s.2 .6 .2 .9-.1 .6-.3 .9-.4 .5-.6 .6c-14.7 8.6-30 15.9-45.9 21.8-.2 .1-.5 .2-.7 .4s-.3 .4-.4 .7-.1 .5-.1 .8 .1 .5 .2 .8c8.8 17 18.8 33.3 30 48.8 .2 .3 .6 .6 .9 .7s.8 .1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2 .2-.2 .4-.4 .5-.6s.2-.5 .2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2zm195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2z" />
-              </svg>
-              <span>Discord</span>
-            </a>
+      <p class="ct__lede" data-reveal style="--i: 1">{{ t.contact.lede }}</p>
+
+      <ul class="ct__channels" role="list">
+        <li
+          v-for="(c, i) in channels"
+          :key="c.key"
+          class="ct__channel"
+          data-reveal
+          :style="{ '--i': i }"
+        >
+          <a class="ct__channel-link" :href="c.href" target="_blank" rel="noreferrer noopener">
+            <span class="ct__channel-label">{{ t.contact[c.key] }}</span>
+            <span class="ct__channel-value num">{{ c.value }}</span>
+            <span class="ct__channel-arrow" aria-hidden="true">↗</span>
+            <span class="sr-only">({{ t.a11y.externalLink }})</span>
+          </a>
+        </li>
+
+        <li class="ct__channel" data-reveal style="--i: 2">
+          <a class="ct__channel-link" :href="`mailto:${ORG.email}`">
+            <span class="ct__channel-label">Email</span>
+            <span class="ct__channel-value num">{{ t.contact.email }}</span>
+            <span class="ct__channel-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+    <footer ref="footer" class="ft" role="contentinfo">
+      <div class="ft__body container">
+        <div class="ft__top">
+          <div class="ft__brand">
+            <p class="ft__wordmark">NekoTech<span>Foundation</span></p>
+            <p class="ft__tagline">{{ t.meta.tagline }}</p>
+
+            <!-- Live status: a running clock is the one thing here that cannot
+                 be a static screenshot. -->
+            <p class="ft__status num" aria-live="off">
+              <span class="ft__status-dot" aria-hidden="true"></span>
+              {{ t.footer.status }}
+              <span class="ft__clock">{{ clock }}</span>
+              <span class="ft__tz">{{ t.footer.timezone }}</span>
+            </p>
           </div>
 
-          <div :class="styles.email">
-            <p>Email us at: <strong>works.nekotech@proton.me</strong></p>
-          </div>
+          <nav class="ft__nav" :aria-label="t.footer.sections">
+            <p class="ft__nav-label">{{ t.footer.sections }}</p>
+            <ul role="list">
+              <li v-for="item in NAV" :key="item.key">
+                <a :href="item.hash" @click.prevent="scrollToHash(item.hash)">
+                  {{ t.nav[item.key] }}
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
-        <div :class="styles.rightColumn">
-          <img src="https://cdn.imgchest.com/files/296f9418c345.png" alt="Contact Placeholder" :class="styles.placeholderImage" />
+
+        <div class="ft__bottom">
+          <p class="ft__legal num">
+            © {{ year }} {{ t.footer.rights }} · {{ ORG.foundedYear }}
+          </p>
+          <p class="ft__built">
+            {{ t.footer.builtWith }} ·
+            <a :href="SITE_REPO" target="_blank" rel="noreferrer noopener" class="link-u">
+              {{ t.footer.sourceLink }}
+            </a>
+          </p>
         </div>
       </div>
-    </ScrollReveal>
+
+      <!-- Closing wordmark. The letterforms are knocked out to transparent so
+           the SignalField lattice behind the section shows through them; it is
+           decorative, and the real wordmark is already above. -->
+      <p class="ft__mark" aria-hidden="true">NEKOTECH</p>
+    </footer>
   </section>
 </template>
+
+<style scoped>
+.ct {
+  position: relative;
+  overflow: clip;
+  border-top: 1px solid var(--border);
+  padding-top: clamp(5rem, 12vw, 10rem);
+}
+
+/* ── Canvas ────────────────────────────────────────────────────────────── */
+.ct__stage {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-canvas);
+  pointer-events: none;
+}
+
+/* Fades the lattice out under the type and into both section seams, so the
+   heading never has to compete with a moving dot. */
+.ct__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 40%, transparent 0%, oklch(0.055 0 0 / 0.72) 62%, var(--bg) 100%),
+    linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 62%, var(--bg) 96%);
+}
+
+/* ── CTA ───────────────────────────────────────────────────────────────── */
+.ct__inner {
+  position: relative;
+  z-index: var(--z-base);
+  padding-bottom: clamp(4rem, 9vw, 7rem);
+}
+
+.ct__heading {
+  font-size: var(--text-4xl);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  margin: var(--space-6) 0 var(--space-6);
+  max-width: 20ch;
+}
+
+/* The one accent mark in this viewport. */
+.ct__heading .line:last-child > span::after {
+  content: '';
+  display: inline-block;
+  width: 0.3em;
+  height: 0.3em;
+  margin-left: 0.2em;
+  vertical-align: 0.1em;
+  background: var(--accent);
+}
+
+.ct__lede {
+  font-size: var(--text-lg);
+  font-weight: 300;
+  color: var(--ink-dim);
+  max-width: 48ch;
+  margin-bottom: var(--space-12);
+}
+
+/* ── Channels ──────────────────────────────────────────────────────────── */
+.ct__channels {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+  max-width: 720px;
+}
+
+.ct__channel { border-bottom: 1px solid var(--border); }
+
+.ct__channel-link {
+  display: grid;
+  grid-template-columns: minmax(0, 0.5fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  transition: padding-left var(--duration-base) var(--ease-out-quart);
+}
+
+.ct__channel-link:hover { padding-left: var(--space-3); }
+
+.ct__channel-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.ct__channel-value {
+  font-size: var(--text-base);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.ct__channel-arrow {
+  font-size: var(--text-sm);
+  color: var(--ink-faint);
+  transition: color var(--duration-fast) ease, transform var(--duration-base) var(--ease-out-quart);
+}
+
+.ct__channel-link:hover .ct__channel-arrow {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
+.ft {
+  --sp: 0;
+  position: relative;
+  z-index: var(--z-base);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-12);
+}
+
+.ft__body { padding-bottom: var(--space-10); }
+
+.ft__top {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-12);
+}
+
+.ft__wordmark {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.ft__wordmark span {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+
+.ft__tagline {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--muted);
+  max-width: 34ch;
+}
+
+/* ── Live status ───────────────────────────────────────────────────────── */
+.ft__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-5);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--muted);
+}
+
+.ft__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  flex-shrink: 0;
+  animation: ft-pulse 2.4s var(--ease-cinematic) infinite;
+}
+
+@keyframes ft-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--ok); opacity: 1; }
+  70% { box-shadow: 0 0 0 5px transparent; opacity: 0.6; }
+}
+
+.ft__clock {
+  color: var(--ink);
+  letter-spacing: 0.08em;
+  /* Tabular figures are already on via .num; this keeps the seconds digit from
+     nudging the timezone label as it counts. */
+  font-variant-numeric: tabular-nums;
+}
+
+.ft__tz { color: var(--ink-faint); }
+
+.ft__nav-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  margin-bottom: var(--space-4);
+}
+
+.ft__nav ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, auto));
+  gap: var(--space-2) var(--space-8);
+}
+
+.ft__nav a {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  transition: color var(--duration-fast) ease;
+}
+
+.ft__nav a:hover { color: var(--ink); }
+
+.ft__bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--hairline);
+}
+
+.ft__legal,
+.ft__built {
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}
+
+.ft__built .link-u { color: var(--muted); font-weight: 400; }
+
+/* ── Closing wordmark ──────────────────────────────────────────────────── */
+.ft__mark {
+  max-width: none;
+  margin: 0;
+  padding: 0 var(--gutter);
+  /* Fills the footer's width so the letterforms are as large as they can be
+     without overflowing. */
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.5rem, 21vw, 20rem);
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  /* Ghosted mass rather than solid type: the fill fades out toward the
+     baseline, so the word reads as rising out of the page edge instead of
+     sitting on it. The stroke keeps the letterforms legible where the fill has
+     gone to nothing. */
+  background: linear-gradient(
+    to bottom,
+    oklch(0.30 0 0) 0%,
+    oklch(0.16 0 0) 55%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 1px oklch(1 0 0 / 0.05);
+  /* Rises into place with scroll, and fades up from nothing. */
+  transform: translateY(calc((1 - var(--sp)) * 2.5rem));
+  opacity: calc(0.25 + var(--sp) * 0.75);
+  transition: opacity var(--duration-base) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft__mark { transform: none; opacity: 1; }
+  .ft__status-dot { animation: none; }
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .ct__channel-link {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--space-1);
+  }
+  /* Label above value instead of a squeezed two-column row. */
+  .ct__channel-label { grid-column: 1 / -1; }
+  .ct__heading { max-width: none; }
+  .ft__nav ul { grid-template-columns: 1fr; }
+}
+</style>

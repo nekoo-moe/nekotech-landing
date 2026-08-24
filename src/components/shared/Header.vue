@@ -1,342 +1,469 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+/**
+ * Header. Three jobs beyond navigation:
+ *
+ * 1. A scroll-progress hairline along the bottom edge — the only always-on
+ *    indicator of how far down the document you are.
+ * 2. Active-section highlight, shared with the footer via `useActiveSection`.
+ * 3. The drawer traps nothing and does no scroll-locking gymnastics: it sets
+ *    `overflow: hidden` on <html> while open and restores it on close, and
+ *    Escape closes it.
+ */
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useLanguage } from '@/components/providers/LanguageProvider.vue';
-import { NavigationConfig } from '@/configs/app.config';
+import { NAV, ORG } from '@/configs/app.config';
+import { scrollToHash, useActiveSection } from '@/composables/useSectionNav';
 import NekoTechLogo from '@/assets/nekotech-logo.png';
 
 const { t, language, setLanguage } = useLanguage();
 
-// Frosted header on scroll
-const scrolled = ref(false);
+const { activeHash } = useActiveSection(NAV.map(n => n.hash));
+
+const condensed = ref(false);
+const progress = ref(0);
 const drawerOpen = ref(false);
 
-const handleScroll = () => {
-  scrolled.value = window.scrollY > 40;
+let raf = 0;
+
+const readScroll = () => {
+  if (raf) return;
+  raf = requestAnimationFrame(() => {
+    raf = 0;
+    const y = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    condensed.value = y > 24;
+    progress.value = max > 0 ? Math.min(1, y / max) : 0;
+  });
 };
 
-onMounted(() => window.addEventListener('scroll', handleScroll, { passive: true }));
-onUnmounted(() => window.removeEventListener('scroll', handleScroll));
+const onKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Escape') drawerOpen.value = false;
+};
 
-// Smooth scroll — delegates to Lenis via scrollTo if available, else native
-const handleNavClick = (e: MouseEvent, url: string) => {
-  if (!url.includes('#')) return;
-  e.preventDefault();
+onMounted(() => {
+  readScroll();
+  window.addEventListener('scroll', readScroll, { passive: true });
+  window.addEventListener('resize', readScroll, { passive: true });
+  window.addEventListener('keydown', onKeydown);
+});
+
+onBeforeUnmount(() => {
+  if (raf) cancelAnimationFrame(raf);
+  window.removeEventListener('scroll', readScroll);
+  window.removeEventListener('resize', readScroll);
+  window.removeEventListener('keydown', onKeydown);
+  document.documentElement.style.overflow = '';
+});
+
+watch(drawerOpen, open => {
+  document.documentElement.style.overflow = open ? 'hidden' : '';
+});
+
+const go = (hash: string) => {
   drawerOpen.value = false;
-  const id = url.split('#').pop();
-  if (!id) return;
-  const target = document.getElementById(id);
-  if (!target) return;
-  // Use Lenis if it's on window, otherwise native smooth scroll
-  const lenis = (window as any).__lenis;
-  if (lenis) {
-    lenis.scrollTo(target, { duration: 1.2 });
-  } else {
-    target.scrollIntoView({ behavior: 'smooth' });
-  }
+  // Let the drawer's scroll-lock lift before Lenis measures the target.
+  requestAnimationFrame(() => scrollToHash(hash, -(68 - 8)));
 };
 
-// Language: reactive switch — NO page reload
-const toggleLanguage = () => {
-  setLanguage(language.value === 'en' ? 'vi' : 'en');
-};
+const toggleLanguage = () => setLanguage(language.value === 'en' ? 'vi' : 'en');
 </script>
 
 <template>
-  <header
-    class="nk-header"
-    :class="{ 'nk-header--scrolled': scrolled }"
-    role="banner"
-  >
-    <div class="nk-header__inner container">
-      <!-- Logo / wordmark -->
-      <a href="#home" class="nk-header__logo" @click="(e) => handleNavClick(e, '#home')">
-        <img :src="NekoTechLogo" alt="NekoTech Foundation" class="nk-header__logo-img" />
-        <span class="nk-header__wordmark">NekoTech</span>
+  <a class="skip" href="#home" @click.prevent="go('#home')">{{ t.a11y.skipToContent }}</a>
+
+  <header class="hd" :class="{ 'hd--condensed': condensed }" role="banner">
+    <div class="hd__inner container">
+      <a class="hd__mark" href="#home" @click.prevent="go('#home')">
+        <img :src="NekoTechLogo" alt="" class="hd__mark-img" aria-hidden="true" />
+        <span class="hd__mark-text">
+          NekoTech<span class="hd__mark-sub">Foundation</span>
+        </span>
       </a>
 
-      <!-- Desktop nav -->
-      <nav class="nk-header__nav" aria-label="Main navigation">
+      <nav class="hd__nav" :aria-label="t.a11y.mainNav">
         <a
-          v-for="item in NavigationConfig"
+          v-for="item in NAV"
           :key="item.key"
-          :href="item.url"
-          class="nk-header__link"
-          @click="(e) => handleNavClick(e, item.url)"
-        >
-          {{ (t.navigation as any)[item.key] }}
-        </a>
+          class="hd__link"
+          :class="{ 'is-active': activeHash === item.hash }"
+          :href="item.hash"
+          :aria-current="activeHash === item.hash ? 'true' : undefined"
+          @click.prevent="go(item.hash)"
+        >{{ t.nav[item.key] }}</a>
       </nav>
 
-      <!-- Actions -->
-      <div class="nk-header__actions">
+      <div class="hd__actions">
         <button
-          class="nk-header__lang"
+          class="hd__lang"
+          type="button"
+          :aria-label="t.a11y.switchTo"
           @click="toggleLanguage"
-          :aria-label="`Switch to ${language === 'en' ? 'Vietnamese' : 'English'}`"
         >
-          {{ language === 'en' ? 'VI' : 'EN' }}
+          <span :class="{ 'is-on': language === 'en' }">EN</span>
+          <span class="hd__lang-sep" aria-hidden="true">/</span>
+          <span :class="{ 'is-on': language === 'vi' }">VI</span>
         </button>
 
-        <!-- Mobile hamburger -->
+        <a class="hd__ghlink" :href="ORG.github" target="_blank" rel="noreferrer noopener">
+          GitHub
+          <span class="sr-only">({{ t.a11y.externalLink }})</span>
+        </a>
+
         <button
-          class="nk-header__hamburger"
+          class="hd__burger"
+          type="button"
           :class="{ 'is-open': drawerOpen }"
-          @click="drawerOpen = !drawerOpen"
-          aria-label="Toggle menu"
+          :aria-label="drawerOpen ? t.a11y.closeMenu : t.a11y.openMenu"
           :aria-expanded="drawerOpen"
+          aria-controls="hd-drawer"
+          @click="drawerOpen = !drawerOpen"
         >
-          <span></span>
-          <span></span>
+          <span></span><span></span>
         </button>
       </div>
     </div>
+
+    <div class="hd__progress" aria-hidden="true">
+      <span :style="{ transform: `scaleX(${progress})` }"></span>
+    </div>
   </header>
 
-  <!-- Mobile drawer -->
   <Teleport to="body">
     <div
-      class="nk-drawer"
-      :class="{ 'nk-drawer--open': drawerOpen }"
+      v-show="drawerOpen"
+      class="dr-backdrop"
+      aria-hidden="true"
+      @click="drawerOpen = false"
+    />
+    <div
+      id="hd-drawer"
+      class="dr"
+      :class="{ 'dr--open': drawerOpen }"
       role="dialog"
       aria-modal="true"
-      aria-label="Navigation menu"
+      :aria-label="t.a11y.mainNav"
+      :aria-hidden="!drawerOpen"
     >
-      <nav class="nk-drawer__nav">
+      <nav class="dr__nav">
         <a
-          v-for="item in NavigationConfig"
+          v-for="(item, i) in NAV"
           :key="item.key"
-          :href="item.url"
-          class="nk-drawer__link"
-          @click="(e) => handleNavClick(e, item.url)"
+          class="dr__link"
+          :style="{ '--i': i }"
+          :href="item.hash"
+          @click.prevent="go(item.hash)"
         >
-          {{ (t.navigation as any)[item.key] }}
+          <span class="dr__idx num">{{ String(i + 1).padStart(2, '0') }}</span>
+          {{ t.nav[item.key] }}
         </a>
-        <button class="nk-drawer__lang" @click="toggleLanguage">
-          Switch to {{ language === 'en' ? 'Tiếng Việt' : 'English' }}
-        </button>
       </nav>
+
+      <div class="dr__foot">
+        <button class="dr__lang" type="button" @click="toggleLanguage">
+          {{ t.a11y.switchTo }}
+        </button>
+        <a class="dr__ext" :href="ORG.github" target="_blank" rel="noreferrer noopener">
+          {{ ORG.github.replace('https://', '') }}
+        </a>
+      </div>
     </div>
-    <!-- Backdrop -->
-    <div
-      v-if="drawerOpen"
-      class="nk-drawer-backdrop"
-      @click="drawerOpen = false"
-      aria-hidden="true"
-    />
   </Teleport>
 </template>
 
 <style scoped>
-/* ── Header shell ── */
-.nk-header {
+/* ── Skip link ─────────────────────────────────────────────────────────── */
+.skip {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--z-sticky);
-  height: 64px;
-  transition: background var(--duration-base) var(--ease-out-quart),
-              border-color var(--duration-base) var(--ease-out-quart);
-  border-bottom: 1px solid transparent;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-toast);
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+  transform: translateY(-160%);
+  transition: transform var(--duration-base) var(--ease-cinematic);
 }
 
-.nk-header--scrolled {
-  background: oklch(0.06 0 0 / 0.88);
-  backdrop-filter: blur(12px) saturate(1.3);
-  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+.skip:focus-visible { transform: none; }
+
+/* ── Shell ─────────────────────────────────────────────────────────────── */
+.hd {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--z-header);
+  height: var(--header-h);
+  border-bottom: 1px solid transparent;
+  transition:
+    background var(--duration-base) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart);
+}
+
+.hd--condensed {
+  background: oklch(0.055 0 0 / 0.72);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
   border-bottom-color: var(--border);
 }
 
-.nk-header__inner {
+.hd__inner {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-6);
+  gap: var(--space-8);
 }
 
-/* ── Logo ── */
-.nk-header__logo {
+/* ── Wordmark ──────────────────────────────────────────────────────────── */
+.hd__mark {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   flex-shrink: 0;
 }
 
-.nk-header__logo-img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-}
+.hd__mark-img { width: 26px; height: 26px; object-fit: contain; }
 
-.nk-header__wordmark {
+.hd__mark-text {
+  display: flex;
+  flex-direction: column;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: var(--text-sm);
-  letter-spacing: -0.01em;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
 
-/* ── Desktop nav ── */
-.nk-header__nav {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  flex: 1;
-  justify-content: center;
+.hd__mark-sub {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--text-2xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
-.nk-header__link {
-  font-size: var(--text-xs);
-  font-weight: 400;
-  color: var(--ink-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+/* ── Nav ───────────────────────────────────────────────────────────────── */
+.hd__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  margin-inline: auto;
+}
+
+.hd__link {
   position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--muted);
+  padding-block: var(--space-2);
   transition: color var(--duration-fast) ease;
 }
 
-.nk-header__link::after {
+.hd__link::after {
   content: '';
   position: absolute;
-  bottom: -2px;
   left: 0;
-  width: 0;
+  right: 0;
+  bottom: 0;
   height: 1px;
   background: var(--accent);
-  transition: width var(--duration-base) var(--ease-out-quart);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-cinematic);
 }
 
-.nk-header__link:hover {
-  color: var(--ink);
-}
+.hd__link:hover { color: var(--ink); }
+.hd__link:hover::after { transform: scaleX(1); }
 
-.nk-header__link:hover::after {
-  width: 100%;
-}
+.hd__link.is-active { color: var(--ink); }
+.hd__link.is-active::after { transform: scaleX(1); }
 
-/* ── Actions ── */
-.nk-header__actions {
+/* ── Actions ───────────────────────────────────────────────────────────── */
+.hd__actions {
   display: flex;
   align-items: center;
   gap: var(--space-4);
   flex-shrink: 0;
 }
 
-.nk-header__lang {
-  font-size: var(--text-xs);
-  font-weight: 500;
+.hd__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.10em;
+  color: var(--ink-faint);
+  padding: 0.3rem 0;
+}
+
+.hd__lang .is-on { color: var(--ink); }
+.hd__lang-sep { color: var(--border-strong); }
+
+.hd__ghlink {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
   color: var(--muted);
-  letter-spacing: 0.06em;
-  padding: var(--space-1) var(--space-3);
+  padding: 0.42rem 0.85rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
 }
 
-.nk-header__lang:hover {
-  color: var(--ink);
-  border-color: var(--muted);
-}
+.hd__ghlink:hover { color: var(--ink); border-color: var(--border-strong); }
 
-/* ── Hamburger ── */
-.nk-header__hamburger {
+/* ── Burger ────────────────────────────────────────────────────────────── */
+.hd__burger {
   display: none;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 28px;
-  height: 28px;
-  padding: 2px;
+  width: 30px;
+  height: 30px;
 }
 
-.nk-header__hamburger span {
+.hd__burger span {
   display: block;
-  width: 100%;
   height: 1px;
   background: var(--ink);
-  transition: transform var(--duration-base) var(--ease-out-quart),
-              opacity var(--duration-fast) ease;
   transform-origin: center;
+  transition: transform var(--duration-base) var(--ease-cinematic);
 }
 
-.nk-header__hamburger.is-open span:first-child {
-  transform: translateY(3px) rotate(45deg);
+.hd__burger span:first-child { width: 100%; }
+.hd__burger span:last-child  { width: 68%; align-self: flex-end; }
+
+.hd__burger.is-open span:first-child { transform: translateY(3px) rotate(45deg); }
+.hd__burger.is-open span:last-child  { width: 100%; transform: translateY(-3px) rotate(-45deg); }
+
+/* ── Scroll progress ───────────────────────────────────────────────────── */
+.hd__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
 }
 
-.nk-header__hamburger.is-open span:last-child {
-  transform: translateY(-3px) rotate(-45deg);
+.hd__progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
 }
 
-/* ── Mobile drawer ── */
-.nk-drawer {
+/* ── Drawer ────────────────────────────────────────────────────────────── */
+.dr-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-drawer) - 1);
+  background: oklch(0 0 0 / 0.66);
+  backdrop-filter: blur(2px);
+}
+
+.dr {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(320px, 85vw);
+  width: min(360px, 88vw);
+  z-index: var(--z-drawer);
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--header-h) + var(--space-8)) var(--space-8) var(--space-8);
   background: var(--bg-raised);
   border-left: 1px solid var(--border);
-  z-index: var(--z-modal);
   transform: translateX(100%);
-  transition: transform var(--duration-slow) var(--ease-out-quart);
+  visibility: hidden;
+  transition:
+    transform var(--duration-slow) var(--ease-cinematic),
+    visibility var(--duration-slow) step-end;
+}
+
+.dr--open {
+  transform: none;
+  visibility: visible;
+  transition:
+    transform var(--duration-slow) var(--ease-cinematic),
+    visibility 0s;
+}
+
+.dr__nav { display: flex; flex-direction: column; }
+
+.dr__link {
   display: flex;
-  flex-direction: column;
-  padding: 80px var(--space-8) var(--space-8);
-}
-
-.nk-drawer--open {
-  transform: translateX(0);
-}
-
-.nk-drawer__nav {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-}
-
-.nk-drawer__link {
+  align-items: baseline;
+  gap: var(--space-4);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--hairline);
   font-family: var(--font-display);
   font-size: var(--text-xl);
   font-weight: 600;
+  letter-spacing: -0.02em;
   color: var(--ink-dim);
-  letter-spacing: -0.01em;
-  transition: color var(--duration-fast) ease;
+  opacity: 0;
+  transform: translateX(18px);
+  transition:
+    opacity var(--duration-slow) var(--ease-cinematic),
+    transform var(--duration-slow) var(--ease-cinematic),
+    color var(--duration-fast) ease;
 }
 
-.nk-drawer__link:hover {
-  color: var(--ink);
+.dr--open .dr__link {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i) * 45ms + 120ms);
 }
 
-.nk-drawer__lang {
+.dr__link:hover { color: var(--ink); }
+
+.dr__idx {
+  font-size: var(--text-2xs);
+  color: var(--ink-faint);
+}
+
+.dr__foot {
   margin-top: auto;
-  font-size: var(--text-sm);
+  padding-top: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.dr__lang,
+.dr__ext {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: 0.10em;
   color: var(--muted);
-  text-align: left;
-  padding: var(--space-4) 0;
-  border-top: 1px solid var(--border);
   transition: color var(--duration-fast) ease;
 }
 
-.nk-drawer__lang:hover {
-  color: var(--ink);
+.dr__lang:hover,
+.dr__ext:hover { color: var(--ink); }
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hd__nav { display: none; }
+  .hd__burger { display: flex; }
+  .hd__inner { justify-content: space-between; }
 }
 
-.nk-drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  background: oklch(0 0 0 / 0.6);
-  z-index: calc(var(--z-modal) - 1);
+@media (max-width: 520px) {
+  .hd__ghlink { display: none; }
 }
 
-/* ── Responsive ── */
-@media (max-width: 768px) {
-  .nk-header__nav {
-    display: none;
-  }
-
-  .nk-header__hamburger {
-    display: flex;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .dr__link { opacity: 1; transform: none; transition: none; }
+  .dr { transition: transform 1ms linear, visibility 1ms; }
 }
 </style>

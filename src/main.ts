@@ -3,55 +3,57 @@ import App from './App.vue';
 import router from './router';
 import './globals.css';
 
-const app = createApp(App);
-app.use(router);
-app.mount('#app');
+createApp(App).use(router).mount('#app');
 
-// ── Global scroll reveal for headings ──────────────────────────
-// Finds all .reveal-heading elements, wraps heading lines in
-// .rh-line > .rh-inner spans, then triggers .is-revealed on scroll.
-function initRevealHeadings() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll<HTMLElement>('.reveal-heading, .reveal-fade').forEach(el => {
-      el.classList.add('is-revealed');
-    });
-    return;
-  }
+/**
+ * One observer for every `[data-reveal]` on the page.
+ *
+ * The previous version rewrote `innerHTML` of every heading on a timer after
+ * `router.afterEach`, which raced Vue's render and threw away the reveal
+ * wrappers whenever the language changed. Now the markup is authored in the
+ * templates and this only ever toggles a class.
+ *
+ * Reduced motion is handled in CSS (`[data-reveal]` is forced visible), so
+ * there is nothing to observe in that case.
+ */
+const REVEALED = 'is-in';
 
-  // Wrap heading text nodes for clip-path reveal
-  document.querySelectorAll<HTMLElement>('.reveal-heading').forEach(wrapper => {
-    const headings = wrapper.querySelectorAll<HTMLElement>('h1, h2, h3');
-    headings.forEach(h => {
-      // Skip if already processed
-      if (h.querySelector('.rh-line')) return;
-      const text = h.innerHTML;
-      // Split on <br> or newlines, wrap each part
-      const parts = text.split(/<br\s*\/?>/i);
-      h.innerHTML = parts.map(part =>
-        `<span class="rh-line"><span class="rh-inner">${part.trim()}</span></span>`
-      ).join('');
-    });
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-revealed');
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const observer = new IntersectionObserver(
+    entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add(REVEALED);
         observer.unobserve(entry.target);
       }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+  );
 
-  document.querySelectorAll<HTMLElement>('.reveal-heading, .reveal-fade').forEach(el => {
-    observer.observe(el);
+  // Sections mount and unmount as routes change, so watch the tree rather
+  // than sweeping it once. `subtree: true` catches nested renders too.
+  const attach = (root: ParentNode) => {
+    root.querySelectorAll('[data-reveal]:not(.is-in)').forEach(el => observer.observe(el));
+  };
+
+  const mutations = new MutationObserver(records => {
+    for (const record of records) {
+      for (const node of record.addedNodes) {
+        if (!(node instanceof Element)) continue;
+        if (node.hasAttribute('data-reveal')) observer.observe(node);
+        attach(node);
+      }
+    }
   });
+
+  const start = () => {
+    const app = document.getElementById('app');
+    if (!app) return;
+    attach(app);
+    mutations.observe(app, { childList: true, subtree: true });
+  };
+
+  // Vue has mounted synchronously above, but child components resolved by
+  // `defineAsyncComponent`/route imports land a tick later.
+  requestAnimationFrame(start);
 }
-
-// Run after Vue mounts + DOM is ready
-router.afterEach(() => {
-  // Small delay to let Vue render
-  setTimeout(initRevealHeadings, 100);
-});
-
-// Also run on initial load
-setTimeout(initRevealHeadings, 200);

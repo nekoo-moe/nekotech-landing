@@ -28,16 +28,18 @@ export function useLanguage() {
 </script>
 
 <script setup lang="ts">
+import { watchEffect } from 'vue';
+
+/**
+ * English is the default. A Vietnamese browser does not silently flip the
+ * page — the visitor's own choice, once made, is the only thing that
+ * overrides it, so a shared link always looks the same to everyone.
+ */
 const language = ref<Language>('en');
 
 onMounted(() => {
-  const savedLang = localStorage.getItem('language') as Language;
-  if (savedLang && (savedLang === 'en' || savedLang === 'vi')) {
-    language.value = savedLang;
-  } else {
-    const browserLang = navigator.language.startsWith('vi') ? 'vi' : 'en';
-    language.value = browserLang;
-  }
+  const saved = localStorage.getItem('language');
+  if (saved === 'en' || saved === 'vi') language.value = saved;
 });
 
 const setLanguage = (lang: Language) => {
@@ -45,8 +47,17 @@ const setLanguage = (lang: Language) => {
   localStorage.setItem('language', lang);
 };
 
-const t = computed<Translation>(() => {
-  return language.value === 'vi' ? vi : en;
+const t = computed<Translation>(() => (language.value === 'vi' ? vi : en));
+
+// Keep the document in sync: <html lang> matters for screen readers and
+// hyphenation, and the title/description are copy like any other.
+watchEffect(() => {
+  if (typeof document === 'undefined') return;
+  document.documentElement.lang = language.value;
+  document.title = `NekoTech Foundation — ${t.value.meta.tagline}`;
+  document
+    .querySelector('meta[name="description"]')
+    ?.setAttribute('content', t.value.meta.description);
 });
 
 provide('languageContext', {

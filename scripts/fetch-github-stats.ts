@@ -28,7 +28,10 @@ loadEnvLocal();
 
 const TOKEN = process.env.GITHUB_TOKEN;
 if (!TOKEN) {
-  console.warn('[github-stats] No GITHUB_TOKEN — writing fallback data.');
+  // A missing token used to mean "write zeros and give up", which put a dead
+  // commit graph on the site. Public endpoints still answer without auth —
+  // we just see the public repos rather than all of them.
+  console.warn('[github-stats] No GITHUB_TOKEN — fetching PUBLIC data only.');
 } else {
   console.log('[github-stats] Token loaded ✓ (length:', TOKEN.length, ')');
 }
@@ -167,14 +170,22 @@ function writeJson(data: object) {
   writeFileSync(resolve('public/github-stats.json'), JSON.stringify(data, null, 2));
 }
 
+// Previous snapshot, if any. Used to avoid regressing org-wide totals: an
+// unauthenticated run only sees public repos, so it would report 9 repos and 2
+// members for an org that really has 40 and 6. Those counts are facts about the
+// org, not about our token — so the larger, truer number wins. Commit activity
+// is always taken fresh, since that is the thing that goes stale.
+function previousSnapshot(): any | null {
+  try {
+    const p = resolve('public/github-stats.json');
+    if (!existsSync(p)) return null;
+    const prev = JSON.parse(readFileSync(p, 'utf-8'));
+    return prev?.isFallback ? null : prev;
+  } catch { return null; }
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 async function main() {
-  if (!TOKEN) {
-    writeJson(FALLBACK);
-    console.log('[github-stats] Wrote fallback (no token).');
-    return;
-  }
-
   try {
     console.log('[github-stats] Fetching org data...');
 
@@ -256,13 +267,22 @@ async function main() {
     console.log('[github-stats] Fetching commit activity...');
     const commitActivity = await orgCommitActivity(repos);
 
+    // Org-wide counts: keep the highest number we have ever seen. Without a
+    // token this run is blind to private repos and org members, and reporting
+    // the smaller public-only figure would look like the org shrank.
+    const prev = previousSnapshot();
+    const atLeast = (fresh: number, key: string) =>
+      Math.max(fresh, typeof prev?.[key] === 'number' ? prev[key] : 0);
+
+    const memberCount = members.length > 0 ? members.length : (org.members_count ?? FALLBACK.members);
+
     const stats = {
-      members: members.length > 0 ? members.length : (org.members_count ?? FALLBACK.members),
-      repos: repos.length,
-      privateRepos: org.total_private_repos ?? FALLBACK.privateRepos,
+      members: atLeast(memberCount, 'members'),
+      repos: atLeast(repos.length, 'repos'),
+      privateRepos: atLeast(org.total_private_repos ?? FALLBACK.privateRepos, 'privateRepos'),
       publicRepos: repos.length,
-      totalStars,
-      totalForks,
+      totalStars: atLeast(totalStars, 'totalStars'),
+      totalForks: atLeast(totalForks, 'totalForks'),
       languages: languages.length ? languages : FALLBACK.languages,
       topProject,
       commitActivity,

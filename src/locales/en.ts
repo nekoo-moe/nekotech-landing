@@ -1,127 +1,261 @@
 import { Translation } from './types';
 
+/**
+ * Tone: say what exists, not what we aspire to. Concrete nouns, real dates,
+ * no "cutting-edge", no "revolutionise". If a sentence would survive being
+ * pasted into a changelog, it belongs here.
+ */
 const en: Translation = {
-  navigation: {
-    home: 'Home',
-    services: 'Services',
-    team: 'Team',
-    story: 'About us',
-    career: 'Our Project',
+  meta: {
+    tagline: 'We ship software in the open.',
+    description:
+      'NekoTech Foundation is a developer collective from Vietnam building AI agents, streaming infrastructure and developer tools — in public, from the first commit.',
+  },
+
+  nav: {
+    work: 'Work',
+    capabilities: 'Capabilities',
+    trajectory: 'Trajectory',
     partners: 'Partners',
-    contact: 'Contact'
+    team: 'Team',
+    contact: 'Contact',
+    sideProjects: 'Side projects',
   },
+
+  a11y: {
+    skipToContent: 'Skip to content',
+    openMenu: 'Open navigation menu',
+    closeMenu: 'Close navigation menu',
+    switchTo: 'Switch to Vietnamese',
+    externalLink: 'opens in a new tab',
+    scrollHint: 'Scroll to continue',
+    mainNav: 'Main navigation',
+  },
+
   hero: {
-    learn: {
-      title: 'Learn',
-      metaTitle: "We're young developer",
-      description: "We are a team of ambitious young developers dedicated to building high-impact solutions. By combining our passion for clean code with daily innovation, we transform complex ideas into extraordinary digital experiences, aiming to redefine the future of technology."
-    },
-    inspire: {
-      title: 'Inspire',
-      metaTitle: "Empowered by passion",
-      description: "Empowered by passion, we are young developers on a mission to democratize technology. Through our courses, we bridge the gap between curiosity and creation—sparking a community where innovation thrives. To us, coding isn't just about syntax; it’s about solving real-world problems and inspiring the next generation of changemakers."
-    },
-    grow: {
-      title: 'Grow',
-      metaTitle: "Better together, day by day",
-      description: "More than just code—we’re building the future. We are a team of young developers who live for the \"Aha!\" moment of a finished project. Through collaboration and relentless curiosity, we transform raw ideas into powerful digital experiences, growing stronger with every line we ship."
-    },
-    landing: {
-      slogan: "simply advanced your technology"
-    }
+    eyebrow: 'NekoTech Foundation · Building since Sep 2025',
+    headline: ['We ship', 'software', 'in the open.'],
+    lede:
+      'A developer collective from Vietnam building AI agents, streaming infrastructure and developer tools. Every commit public. Every decision written down.',
+    primaryCta: 'See what we build',
+    secondaryCta: 'Join the org',
   },
-  services: {
-    title: 'Our Services',
-    subtitle: 'What we can do for you...',
-    items: {
-      web: {
-        title: 'Web Development',
-        description: 'Building responsive, high-performance websites tailored to your needs using modern frameworks and best practices. We ensure your online presence is robust, secure, and visually appealing.'
-      },
-      mobile: {
-        title: 'Mobile Applications',
-        description: 'Creating seamless mobile experiences for both iOS and Android platforms. Our apps are designed for performance, usability, and to keep your users engaged on the go.'
-      },
-      fullstack: {
-        title: 'Full-Stack Applications',
-        description: 'We build full-stack solutions that are as robust as they are user-friendly. From architecting scalable APIs to crafting dynamic user interfaces, we handle the entire development lifecycle to turn your most ambitious ideas into fully functional realities.'
-      },
-      minecraft: {
-        title: 'Minecraft Server',
-        description: "We create Minecraft servers that are not just fun but also secure and engaging. Whether you're building a survival realm or a creative hub, we ensure your server is optimized for performance and player experience."
-      }
-    }
+
+  signal: {
+    label: 'Signal',
+    heading: 'Measured, not claimed.',
+    lede:
+      'Pulled straight from the GitHub org at build time. When the numbers move, this page moves with them.',
+    members: 'Members',
+    repositories: 'Repositories',
+    privateSuffix: 'private',
+    stars: 'Stars',
+    commits: 'commits',
+    commitsWindow: 'last 52 weeks',
+    weekLabel: 'Week',
+    less: 'Less',
+    more: 'More',
+    busiestRepo: 'Busiest repository',
+    acrossRepos: 'across {n} repos',
+    languages: 'What we write',
+    orgLink: 'Browse the org on GitHub',
+    stale: 'Snapshot — refreshed on every deploy',
   },
-  sideProjects: {
-    title: "Side Projects",
-    subtitle: "Other cool stuff we've built",
-    items: {
-      nekobuckets: {
-        description: "NekoBuckets - A masterpiece by Heiznerd. A comprehensive, smooth-operating Discord bot designed to meet every management and entertainment need of your community."
-      },
-      nekomusics: {
-        description: "NekoMusics - An open-source project by Heiznerd. Bringing a vivid world of high-quality music directly to your Discord server."
-      }
+
+  work: {
+    label: 'Work',
+    heading: 'Four products, one ecosystem.',
+    lede:
+      'Everything below is either running in production or in active development. Nothing here is a mockup.',
+    statuses: {
+      active: 'Live',
+      development: 'In development',
+      planned: 'Planned',
     },
-    actions: {
-      invite: "Invite Bot",
-      viewSource: "View Source",
-      viewFrontend: "View Frontend",
-      viewBackend: "View Backend"
-    }
-  },
-  story: {
-    title: 'Our Journey',
-    subtitle: 'Journey from the beginning...',
-    slides: {
-      slide1: {
-        date: "SEP 26, 2025",
-        title: "Code and learn<br> With Passion",
-        subtitle: "The beginning of NekoTech Foundation",
-        p1: "Founded by akk1to in <strong>September 26, 2025</strong>. We began as a small Discord group with a single goal: recreating a manga reader. That initial project laid the foundation for the team we are today—a group of passionate developers building innovative tools and impressive digital experiences.",
-        p2: "Currently our core team have three members: <strong>@ssdarealest (alyosha)</strong>, <strong>@captainnhwuy (Heiznerd)</strong>, <strong>@maiminhdung</strong>."
-      },
-      slide2: {
-        date: "DEC 18, 2025",
-        title: "learn together. <br>grow together.",
-        subtitle: "Our passion",
-        p1: "We are a collective of developers who have logged countless hours learning, coding, and working on our projects together. Today, we are building <strong>NekoAI</strong>, <strong>NekoStream</strong>, <strong>Fujiwara</strong> and more.",
-        p2: "Connect with a team of driven students to learn, work, and grow together. We believe that by constantly pushing our limits, we only get better.",
-        p3: "<strong>Apply to join today:</strong> works.nekotech@proton.me"
-      }
-    }
-  },
-  careers: {
-    title: 'Our Projects',
-    subtitle: 'Check out the products we are shipping.',
     items: {
       nekoai: {
-        description: "NekoAI is a 2D AI Agent, inspired by Neuro-sama, built to help people do the job!"
+        tag: 'AI agent',
+        summary:
+          'A 2D AI companion that streams, reacts and gets work done — inspired by Neuro-sama, built to be useful rather than a novelty. Voice, memory and tool use in one agent.',
       },
       nekostream: {
-        description: "NekoStream is a Vietnamese streaming platform built for anime fans who are tired of ads, region locks, and terrible UI. Fast, clean, and community-first."
+        tag: 'Streaming platform',
+        summary:
+          'A Vietnamese streaming platform for anime viewers who are tired of pop-up ads, region locks and unusable players. Fast, quiet, community-first.',
       },
       nekostreamCli: {
-        description: "NekoStream CLI — watch everything from your terminal. A no-nonsense command-line client for NekoStream, built for developers and power users who live in the shell."
+        tag: 'CLI',
+        summary:
+          'The same catalogue, without the browser. A terminal client for NekoStream: search, queue and play from the shell you already live in.',
       },
       fujiwara: {
-        description: "Fujiwara Shin is your org's personal Discord bot — built by NekoTech, shaped for you. Moderation, music, leveling, custom commands. Forget cookie-cutter bots. Fujiwara does exactly what your server needs, nothing else. We deploy, we maintain, you own it."
-      }
-    }
+        tag: 'Discord bot',
+        summary:
+          'A Discord bot shaped to one server instead of a hundred thousand. Moderation, music, levelling, custom commands — we deploy it, we maintain it, you own it.',
+      },
+    },
+    sideProjectsCta: 'Side projects',
   },
+
+  capabilities: {
+    label: 'Capabilities',
+    heading: 'What we can be hired for.',
+    lede:
+      'Four things we do properly. We would rather turn work down than take on something we have not shipped before.',
+    items: {
+      product: {
+        tag: 'Web · Frontend',
+        summary:
+          'Product interfaces built to hold up: real accessibility, real performance budgets, real states for loading, empty and error. Vue, React, TypeScript.',
+      },
+      platform: {
+        tag: 'Backend · Infra',
+        summary:
+          'APIs, data models and deployment pipelines. Rust and Node where it matters, Postgres by default, observability from day one rather than after the first outage.',
+      },
+      bots: {
+        tag: 'Discord · Automation',
+        summary:
+          'Discord bots and automation for communities: moderation, ticketing, music, custom flows. Built, hosted and handed over with documentation.',
+      },
+      gameservers: {
+        tag: 'Game servers',
+        summary:
+          'Minecraft server setup and tuning — plugins, anti-cheat, backups and the performance work that stops a full server from stuttering.',
+      },
+    },
+  },
+
+  trajectory: {
+    label: 'Trajectory',
+    heading: 'From a Discord group to an org.',
+    lede:
+      'One continuous line: where we came from, and what is already scheduled.',
+    shipped: 'Shipped',
+    next: 'Next',
+    items: {
+      founded: {
+        date: 'Sep 2025',
+        title: 'Founded',
+        body:
+          'akk1to starts a Discord group with one goal: rebuild a manga reader properly. Three developers, one shared habit of finishing things.',
+      },
+      firstShip: {
+        date: 'Dec 2025',
+        title: 'First products ship',
+        body:
+          'NekoBuckets and NekoMusics go live. The group stops being a group chat and starts being a team with users.',
+      },
+      growth: {
+        date: 'Early 2026',
+        title: 'The org takes shape',
+        body:
+          'NekoAI, NekoStream and Fujiwara enter active development. First contributors from outside the founding three. Partnership with LangBangVN begins.',
+      },
+      nekoaiBeta: {
+        date: 'Q3 2026',
+        title: 'NekoAI public beta',
+        body:
+          'The 2D agent opens for community testing. Bug reports welcome, feature requests read, roadmap public.',
+      },
+      nekostreamLaunch: {
+        date: 'Q4 2026',
+        title: 'NekoStream launch',
+        body:
+          'Public launch of the streaming platform: no interstitial ads, no region walls, a player that works on a five-year-old phone.',
+      },
+      platform: {
+        date: '2027',
+        title: 'One platform',
+        body:
+          'Single sign-on across every NekoTech product and a public API, so what we built internally becomes something others can build on.',
+      },
+    },
+  },
+
+  partners: {
+    label: 'Partners',
+    heading: 'The people who bet on us early.',
+    lede:
+      'Two partnerships, both still running. We would rather list two real ones than twenty logos.',
+    visit: 'Visit site',
+    discord: 'Discord',
+    ctaLead: 'Want to work together?',
+    ctaLink: 'Tell us what you need',
+    items: {
+      langbangvn: {
+        name: 'LangBangVN — CoffoxMC',
+        tag: 'Minecraft server',
+        badge: 'Five years running',
+        summary:
+          'A long-running Vietnamese Minecraft server with well-built game modes and a stable player base. NekoTech has handled its technical work since January 2026.',
+      },
+      nekostudio: {
+        name: 'NekoStudio',
+        tag: 'Discord service',
+        badge: 'Discord · Custom bots',
+        summary:
+          'Discord bot setup, custom builds and server configuration, run by Alyosha and Heiznerd. The commercial arm of the same team.',
+      },
+    },
+  },
+
+  team: {
+    label: 'Team',
+    heading: 'Four people, no filler.',
+    lede: 'The core team. Everyone here writes code that ships.',
+    roles: {
+      lead: 'Team lead · Backend',
+      frontend: 'Frontend',
+      backend: 'Backend · Mobile',
+      deploy: 'Fracs Deploy · PRs Handler',
+    },
+    osuProfile: 'osu! profile',
+    website: 'Personal site',
+  },
+
   contact: {
-    title: "Contact Us",
-    subtitle: "Let's build something together",
-    description: "Have a project in mind or want to join our team? Send us a message!",
-    form: {
-      name: "Your Name",
-      email: "Email Address",
-      message: "Message",
-      submit: "Send Message",
-      submitting: "Sending...",
-      success: "Message sent successfully!"
-    }
-  }
+    label: 'Contact',
+    heading: ['We build in', 'the open.'],
+    lede:
+      'Contribute, hire us, or apply to join. All three start with the same message.',
+    github: 'GitHub org',
+    discord: 'Discord server',
+    email: 'works.nekotech@proton.me',
+  },
+
+  footer: {
+    builtWith: 'Built with Vue, Vite and three.js',
+    sourceLink: 'Source on GitHub',
+    rights: 'NekoTech Foundation',
+    sections: 'Sections',
+    status: 'Shipping from Hanoi',
+    timezone: 'ICT',
+  },
+
+  sideProjects: {
+    back: 'Back to home',
+    label: 'Side projects',
+    heading: 'Things we built for ourselves.',
+    lede:
+      'Not products, not roadmapped — written because we wanted them, kept because other people use them.',
+    items: {
+      nekobuckets: {
+        tag: 'Discord bot',
+        summary:
+          'A general-purpose Discord bot by Heiznerd covering the moderation and entertainment a community actually asks for, without the dashboard upsell.',
+      },
+      nekomusics: {
+        tag: 'Discord bot · Open source',
+        summary:
+          'An open-source music bot by Heiznerd. High-quality audio in a Discord voice channel, no premium tier gating the queue.',
+      },
+    },
+    actions: {
+      invite: 'Invite bot',
+      viewSource: 'View source',
+    },
+  },
 };
 
 export default en;

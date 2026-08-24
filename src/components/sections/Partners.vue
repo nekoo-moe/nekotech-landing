@@ -1,371 +1,269 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
+/**
+ * Partners — two, both real, both current.
+ *
+ * The old version hardcoded Vietnamese copy here, so the EN toggle left this
+ * section untranslated. Everything textual now comes from `t.partners`; only
+ * the URLs and logo assets live in the component.
+ *
+ * Two cards side by side is a layout with nowhere to hide, so the cards carry
+ * the weight: a cursor-tracked light, a lift on hover, and a slow sheen that
+ * crosses the logo lockup. Without those this was the emptiest plate on the
+ * page.
+ */
+import { computed } from 'vue';
+import { useLanguage } from '@/components/providers/LanguageProvider.vue';
+import { scrollToHash } from '@/composables/useSectionNav';
+import { useSpotlight } from '@/composables/useSpotlight';
+import SectionHead from '@/components/shared/SectionHead.vue';
+import langbangIcon from '@/assets/langbangvnicon.png';
+import langbangText from '@/assets/textlangbangvn.png';
 
-const sectionRef = ref<HTMLElement | null>(null);
-const isVisible = ref(false);
+const { t } = useLanguage();
+const { onPointerMove, onPointerLeave } = useSpotlight();
 
-const partners = [
-  {
-    id: 'langbangvn',
-    name: 'LangBangVN — CoffoxMC',
-    description: 'Máy chủ Minecraft uy tín, hoạt động 5 năm với các cụm chơi hay ho, mượt mà. NekoTech Studio đồng hành cùng LangBangVN từ tháng 1/2026.',
-    tag: 'Minecraft Server',
-    url: 'https://langbangvn.net',
-    discordUrl: 'https://discord.langbangvn.net',
-    badge: '5 năm hoạt động',
-    iconSrc: new URL('@/assets/langbangvnicon.png', import.meta.url).href,
-    textSrc: new URL('@/assets/textlangbangvn.png', import.meta.url).href,
-  },
-  {
-    id: 'nekostudio',
-    name: 'NekoStudio',
-    description: 'Dịch vụ Setup Discord Bot, Tạo Discord Bot theo yêu cầu, Khởi tạo Discord Bot theo Template, Cấu hình máy chủ Discord dễ dàng, chuyên nghiệp — đội ngũ NekoTech gồm Alyosha, Heiznerd.',
-    tag: '#2 Discord Service',
-    url: 'https://dsc.gg/nekostudio',
-    discordUrl: 'https://dsc.gg/nekostudio',
-    badge: 'Discord · Custom Bot',
-    iconSrc: null,
-    textSrc: null,
-  },
-];
+const links = {
+  langbangvn: { site: 'https://langbangvn.net', discord: 'https://discord.langbangvn.net' },
+  nekostudio: { site: 'https://dsc.gg/nekostudio', discord: 'https://dsc.gg/nekostudio' },
+} as const;
 
-onMounted(async () => {
-  await nextTick();
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) { isVisible.value = true; return; }
+const ids = ['langbangvn', 'nekostudio'] as const;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        isVisible.value = true;
-        observer.disconnect();
-      }
-    });
-  }, { threshold: 0.15 });
-
-  if (sectionRef.value) observer.observe(sectionRef.value);
-});
+const partners = computed(() =>
+  ids.map(id => ({ id, ...t.value.partners.items[id], ...links[id] }))
+);
 </script>
 
 <template>
-  <section id="partners" class="partners section" ref="sectionRef">
+  <section id="partners" class="pt section section--ruled" aria-labelledby="pt-heading">
     <div class="container">
-      <header class="partners__header reveal-heading" :class="{ 'is-visible': isVisible }">
-        <p class="partners__eyebrow">Trusted by builders</p>
-        <h2 class="partners__heading">With the greatest<br>partners you'll ever see.</h2>
-        <p class="partners__sub">
-          The people and organizations who bet on us early — and keep betting.
-        </p>
-      </header>
+      <SectionHead
+        :label="t.partners.label"
+        :heading="t.partners.heading"
+        :lede="t.partners.lede"
+        heading-id="pt-heading"
+        index="05"
+      />
 
-      <div class="partners__grid">
-        <a
-          v-for="(partner, i) in partners"
-          :key="partner.id"
-          :href="partner.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="partners__card"
-          :class="{ 'is-visible': isVisible }"
-          :style="{ transitionDelay: `${i * 130 + 180}ms` }"
+      <ul class="pt__grid" role="list">
+        <li
+          v-for="(p, i) in partners"
+          :key="p.id"
+          class="pt__card"
+          data-reveal
+          :style="{ '--i': i }"
+          @pointermove="onPointerMove"
+          @pointerleave="onPointerLeave"
         >
-          <!-- Logo area -->
-          <div class="partners__card-logo">
-            <!-- LangBangVN: icon + text logo -->
-            <template v-if="partner.id === 'langbangvn'">
-              <div class="partners__langbang">
-                <img
-                  :src="partner.iconSrc!"
-                  alt="LangBangVN icon"
-                  class="partners__langbang-icon"
-                  loading="lazy"
-                  @error="(e) => (e.target as HTMLElement).style.display = 'none'"
-                />
-                <img
-                  :src="partner.textSrc!"
-                  alt="LangBangVN"
-                  class="partners__langbang-text"
-                  loading="lazy"
-                  @error="(e) => (e.target as HTMLElement).style.display = 'none'"
-                />
-                <span class="partners__langbang-fallback">LangBangVN</span>
-              </div>
+          <span class="pt__glow" aria-hidden="true"></span>
+
+          <div class="pt__logo">
+            <span class="pt__sheen" aria-hidden="true"></span>
+            <template v-if="p.id === 'langbangvn'">
+              <img :src="langbangIcon" alt="" class="pt__logo-mark" aria-hidden="true" />
+              <img :src="langbangText" alt="" class="pt__logo-text" aria-hidden="true" />
             </template>
-
-            <!-- NekoStudio: text -->
-            <template v-else>
-              <span class="partners__logo-text">NekoStudio</span>
-            </template>
+            <!-- NekoStudio has no logo asset; a wordmark is honest, a
+                 placeholder box is not. -->
+            <span v-else class="pt__logo-word">NekoStudio</span>
           </div>
 
-          <!-- Body -->
-          <div class="partners__card-body">
-            <div class="partners__card-top">
-              <h3 class="partners__card-name">{{ partner.name }}</h3>
-              <span class="partners__card-tag">{{ partner.tag }}</span>
-            </div>
-            <p class="partners__card-desc">{{ partner.description }}</p>
+          <div class="pt__meta">
+            <span class="pt__tag">{{ p.tag }}</span>
+            <span class="pt__badge">{{ p.badge }}</span>
           </div>
 
-          <!-- Footer -->
-          <div class="partners__card-footer">
-            <span class="partners__badge">{{ partner.badge }}</span>
-            <div class="partners__links">
-              <span class="partners__link">Visit ↗</span>
-              <a
-                v-if="partner.discordUrl && partner.discordUrl !== partner.url"
-                :href="partner.discordUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="partners__link"
-                @click.stop
-              >Discord ↗</a>
-            </div>
-          </div>
+          <h3 class="pt__name">{{ p.name }}</h3>
+          <p class="pt__summary">{{ p.summary }}</p>
 
-          <div class="partners__card-arrow" aria-hidden="true">↗</div>
+          <div class="pt__actions">
+            <a class="pt__action link-u" :href="p.site" target="_blank" rel="noreferrer noopener">
+              {{ t.partners.visit }}
+              <span aria-hidden="true">↗</span>
+              <span class="sr-only">({{ t.a11y.externalLink }})</span>
+            </a>
+            <a class="pt__action link-u" :href="p.discord" target="_blank" rel="noreferrer noopener">
+              {{ t.partners.discord }}
+              <span aria-hidden="true">↗</span>
+              <span class="sr-only">({{ t.a11y.externalLink }})</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+
+      <p class="pt__cta" data-reveal>
+        {{ t.partners.ctaLead }}
+        <a class="link-u" href="#contact" @click.prevent="scrollToHash('#contact')">
+          {{ t.partners.ctaLink }}
+          <span aria-hidden="true">→</span>
         </a>
-      </div>
-
-      <div class="partners__cta" :class="{ 'is-visible': isVisible }">
-        <span class="partners__cta-line" aria-hidden="true"></span>
-        <a href="mailto:works.nekotech@proton.me" class="partners__cta-link">
-          Interested in partnering? Let's talk →
-        </a>
-        <span class="partners__cta-line" aria-hidden="true"></span>
-      </div>
+      </p>
     </div>
   </section>
 </template>
 
 <style scoped>
-/* ── Header ── */
-.partners__header {
-  margin-bottom: var(--space-12);
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 600ms var(--ease-out-quart),
-              transform 600ms var(--ease-out-quart);
-}
-.partners__header.is-visible { opacity: 1; transform: none; }
-
-.partners__eyebrow {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: var(--space-4);
-}
-
-.partners__heading {
-  font-size: var(--text-3xl);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  line-height: 1.05;
-  margin-bottom: var(--space-4);
-}
-
-.partners__sub {
-  font-size: var(--text-base);
-  color: var(--muted);
-  font-weight: 300;
-}
-
-/* ── Grid ── */
-.partners__grid {
+.pt__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: var(--space-5);
-  margin-bottom: var(--space-12);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
 }
 
-/* ── Card — pure monochrome ── */
-.partners__card {
+.pt__card {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
+  padding: var(--space-8);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  position: relative;
+  transition:
+    border-color var(--duration-base) ease,
+    background var(--duration-base) ease,
+    transform var(--duration-base) var(--ease-out-quart),
+    box-shadow var(--duration-base) ease;
+}
+
+.pt__card:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.pt__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 500ms var(--ease-out-quart),
-              transform 500ms var(--ease-out-quart),
-              border-color var(--duration-base) ease;
-  text-decoration: none;
+  pointer-events: none;
+  background: radial-gradient(
+    18rem circle at var(--mx) var(--my),
+    oklch(0.42 0 0 / 0.45),
+    transparent 66%
+  );
+  transition: opacity var(--duration-base) ease;
 }
 
-.partners__card.is-visible { opacity: 1; transform: none; }
-.partners__card:hover { border-color: var(--muted); }
+.pt__card:hover .pt__glow { opacity: 1; }
 
-/* ── Logo ── */
-.partners__card-logo {
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-.partners__langbang {
+/* ── Logo lockup ───────────────────────────────────────────────────────── */
+.pt__logo {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  height: 42px;
+  margin-bottom: var(--space-2);
 }
 
-.partners__langbang-icon {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  border-radius: var(--radius-sm);
-  flex-shrink: 0;
+/* A single pass of light across the lockup on hover. Fires once per hover
+   rather than looping — a looping shine on a partner logo reads as an advert. */
+.pt__sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40%;
+  width: 40%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    oklch(1 0 0 / 0.13) 50%,
+    transparent
+  );
 }
 
-.partners__langbang-text {
-  max-height: 24px;
-  width: auto;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
+.pt__card:hover .pt__sheen {
+  animation: pt-sweep var(--duration-slower) var(--ease-cinematic);
 }
 
-/* Hide fallback when images load */
-.partners__langbang-icon:not([style*="display: none"]) ~ .partners__langbang-fallback,
-.partners__langbang-text:not([style*="display: none"]) ~ .partners__langbang-fallback {
-  display: none;
+@keyframes pt-sweep {
+  from { left: -40%; }
+  to { left: 110%; }
 }
 
-.partners__langbang-fallback {
+.pt__logo-mark { height: 36px; width: auto; object-fit: contain; }
+.pt__logo-text { height: 22px; width: auto; object-fit: contain; }
+
+.pt__logo-word {
   font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--ink);
 }
 
-.partners__logo-text {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-/* ── Body ── */
-.partners__card-body {
-  flex: 1;
+/* ── Meta row ──────────────────────────────────────────────────────────── */
+.pt__meta {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.partners__card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
   gap: var(--space-3);
   flex-wrap: wrap;
 }
 
-.partners__card-name {
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-.partners__card-tag {
-  font-size: var(--text-xs);
-  font-weight: 500;
+.pt__tag,
+.pt__badge {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
+  letter-spacing: 0.13em;
 }
 
-.partners__card-desc {
-  font-size: var(--text-sm);
-  color: var(--muted);
-  line-height: 1.65;
-}
+.pt__tag { color: var(--muted); }
 
-/* ── Footer ── */
-.partners__card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border);
-  margin-top: auto;
-}
-
-.partners__badge {
-  font-size: var(--text-xs);
-  color: var(--muted);
-  font-weight: 500;
-  letter-spacing: 0.05em;
-}
-
-.partners__links {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.partners__link {
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color var(--duration-fast) ease;
-}
-.partners__card:hover .partners__link { color: var(--ink-dim); }
-
-/* ── Arrow ── */
-.partners__card-arrow {
-  position: absolute;
-  top: var(--space-5);
-  right: var(--space-5);
-  font-size: var(--text-sm);
-  color: var(--border);
-  transition: color var(--duration-fast) ease,
-              transform var(--duration-fast) var(--ease-out-quart);
-}
-.partners__card:hover .partners__card-arrow {
+.pt__badge {
   color: var(--ink-dim);
-  transform: translate(3px, -3px);
+  padding: 0.28em 0.7em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
 }
 
-/* ── CTA ── */
-.partners__cta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-  opacity: 0;
-  transition: opacity 600ms var(--ease-out-quart) 500ms;
-}
-.partners__cta.is-visible { opacity: 1; }
-
-.partners__cta-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
+/* ── Copy ──────────────────────────────────────────────────────────────── */
+.pt__name {
+  font-size: var(--text-xl);
+  letter-spacing: -0.028em;
 }
 
-.partners__cta-link {
+.pt__summary {
   font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--muted);
-  white-space: nowrap;
-  transition: color var(--duration-fast) ease;
+  color: var(--ink-dim);
+  font-weight: 300;
+  flex: 1;
 }
-.partners__cta-link:hover { color: var(--ink); }
 
-/* ── Responsive ── */
-@media (max-width: 640px) {
-  .partners__cta { flex-direction: column; text-align: center; gap: var(--space-4); }
-  .partners__cta-line { display: none; }
+.pt__actions {
+  display: flex;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  padding-top: var(--space-2);
+}
+
+.pt__action { font-size: var(--text-sm); }
+
+/* ── Closing line ──────────────────────────────────────────────────────── */
+.pt__cta {
+  margin-top: var(--space-10);
+  font-size: var(--text-base);
+  color: var(--muted);
+}
+
+.pt__cta .link-u { margin-left: var(--space-2); }
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .pt__grid { grid-template-columns: 1fr; }
+  .pt__card { padding: var(--space-6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pt__glow, .pt__sheen { display: none; }
+  .pt__card:hover { transform: none; }
 }
 </style>
