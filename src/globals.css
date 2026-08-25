@@ -1,6 +1,40 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
+   MARLIN SOFT — licensed display face.
+   ---------------------------------------------------------------
+   Not redistributable, so the files are not in the repo. Drop
+   `marlinsoft-{600,700,800}.woff2` into `public/fonts/` and these
+   rules pick them up on the next load; until then every stack
+   falls through to Open Runde, which is metrically close enough
+   that no layout shifts when the real face arrives.
+   ═══════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: marlinSoft;
+  src: url('/fonts/marlinsoft-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: marlinSoft;
+  src: url('/fonts/marlinsoft-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: marlinSoft;
+  src: url('/fonts/marlinsoft-800.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    NEKOTECH FOUNDATION — DESIGN SYSTEM
    ---------------------------------------------------------------
    Strategy : near-black canvas, monochrome hierarchy, one accent
@@ -46,10 +80,21 @@
   --warn:  oklch(0.790 0.150 75);
   --idle:  var(--muted);
 
-  /* ── Type families ─────────────────────────────────────────── */
-  --font-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* ── Type families ─────────────────────────────────────────────
+     Two families, no monospace. `--font-mono` survives as a name for
+     the `.num`/`.font-mono` utilities only — every label and eyebrow
+     rule that used to reference it now sits on `--font-display`. It
+     resolves to the same rounded sans as body copy: the small-caps
+     labels get their technical feel from letter-spacing, not from a
+     typewriter face.
+
+     Marlin Soft is a licensed face: drop the woff2 files into
+     `public/fonts/` (see the @font-face block below) and it takes
+     over headings. Until then the stack falls through to Open Runde,
+     which is metrically close enough that nothing reflows. */
+  --font-display: marlinSoft, 'marlinSoft Fallback', openRunde, 'openRunde Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-body:    openRunde, 'openRunde Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    openRunde, 'openRunde Fallback', ui-sans-serif, system-ui, sans-serif;
 
   /* ── Type scale — fluid, 1.25 ratio at the small end,
         widening to 1.4 for display sizes ─────────────────────── */
@@ -159,9 +204,11 @@ p { max-width: var(--max-w-text); text-wrap: pretty; }
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-mono);
+  /* Eyebrows read as section titles, so they sit on the display face with the
+     headings rather than on the body stack. */
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);

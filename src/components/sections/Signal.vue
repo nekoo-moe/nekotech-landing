@@ -2,6 +2,9 @@
 /**
  * Signal — the org's numbers, taken from a build-time GitHub snapshot.
  *
+ * It sits *after* `Showcase` and `Partners`: a commit count is corroboration
+ * for work a stranger already believes shipped, not an opening argument.
+ *
  * Layout note: the old version stacked five full-width blocks and read as a
  * dashboard. This is a 12-column plate instead — three figures across the top,
  * the commit band and the busiest repo sharing a row beneath — so the whole
@@ -41,7 +44,7 @@ const acrossRepos = computed(() =>
         :heading="t.signal.heading"
         :lede="t.signal.lede"
         heading-id="sig-heading"
-        index="01"
+        index="03"
       />
 
       <!-- ── Three figures ──────────────────────────────────────────────── -->
@@ -228,7 +231,7 @@ const acrossRepos = computed(() =>
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -290,7 +293,7 @@ const acrossRepos = computed(() =>
 }
 
 .sig__panel-title {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -300,7 +303,7 @@ const acrossRepos = computed(() =>
 .sig__panel-title .num { color: var(--ink); font-weight: 500; }
 
 .sig__panel-meta {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   letter-spacing: 0.08em;
   color: var(--ink-faint);
@@ -341,7 +344,7 @@ const acrossRepos = computed(() =>
   display: flex;
   align-items: center;
   gap: 3px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   letter-spacing: 0.1em;
   color: var(--ink-faint);
@@ -363,7 +366,7 @@ const acrossRepos = computed(() =>
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-5);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.12em;

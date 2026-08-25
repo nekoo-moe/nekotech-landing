@@ -16,11 +16,17 @@
  *
  * `shipped` is not translated copy — it is a fact about each milestone — so it
  * lives here, not in the locale.
+ *
+ * The section sits on a `DotWaveField` — a contained dot lattice with a wave
+ * crossing it. A timeline is a measured sequence, so graph paper with time
+ * moving through it is the honest background for one; it also stops the
+ * section reading as copy floating on the bare page canvas.
  */
 import { computed, ref } from 'vue';
 import { useLanguage } from '@/components/providers/LanguageProvider.vue';
 import { useScrollProgress } from '@/composables/useScrollProgress';
 import SectionHead from '@/components/shared/SectionHead.vue';
+import DotWaveField from '@/components/shared/DotWaveField.vue';
 
 const { t } = useLanguage();
 
@@ -54,13 +60,15 @@ useScrollProgress(spine, { start: 0.8, end: 0.5 });
 
 <template>
   <section id="trajectory" class="tj section section--ruled" aria-labelledby="tj-heading">
-    <div class="container">
+    <DotWaveField :gap="28" :intensity="0.46" />
+
+    <div class="container tj__inner">
       <SectionHead
         :label="t.trajectory.label"
         :heading="t.trajectory.heading"
         :lede="t.trajectory.lede"
         heading-id="tj-heading"
-        index="04"
+        index="07"
       />
 
       <ol ref="spine" class="tj__spine" role="list">
@@ -97,6 +105,11 @@ useScrollProgress(spine, { start: 0.8, end: 0.5 });
 </template>
 
 <style scoped>
+/* The field is absolutely positioned against this, and the copy has to sit
+   over it — hence the explicit stacking rather than relying on source order. */
+.tj { position: relative; isolation: isolate; }
+.tj__inner { position: relative; z-index: 1; }
+
 .tj__spine {
   --sp: 0;
   position: relative;
@@ -207,7 +220,7 @@ useScrollProgress(spine, { start: 0.8, end: 0.5 });
 }
 
 .tj__flag {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.13em;
@@ -257,7 +270,7 @@ useScrollProgress(spine, { start: 0.8, end: 0.5 });
 }
 
 .tj__divider-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.2em;

@@ -46,7 +46,7 @@ useScrollProgress(list, { start: 0.85, end: 0.55 });
         :heading="t.capabilities.heading"
         :lede="t.capabilities.lede"
         heading-id="cap-heading"
-        index="03"
+        index="06"
       />
 
       <dl ref="list" class="cap__list">

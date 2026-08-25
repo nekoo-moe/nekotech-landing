@@ -236,7 +236,7 @@ const toggleLanguage = () => setLanguage(language.value === 'en' ? 'vi' : 'en');
 }
 
 .hd__mark-sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: var(--text-2xs);
   letter-spacing: 0.14em;
@@ -254,7 +254,7 @@ const toggleLanguage = () => setLanguage(language.value === 'en' ? 'vi' : 'en');
 
 .hd__link {
   position: relative;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.13em;
@@ -294,7 +294,7 @@ const toggleLanguage = () => setLanguage(language.value === 'en' ? 'vi' : 'en');
   display: inline-flex;
   align-items: center;
   gap: 0.35em;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   letter-spacing: 0.10em;
   color: var(--ink-faint);
@@ -305,7 +305,7 @@ const toggleLanguage = () => setLanguage(language.value === 'en' ? 'vi' : 'en');
 .hd__lang-sep { color: var(--border-strong); }
 
 .hd__ghlink {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.13em;
@@ -441,7 +441,7 @@ const toggleLanguage = () => setLanguage(language.value === 'en' ? 'vi' : 'en');
 
 .dr__lang,
 .dr__ext {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   letter-spacing: 0.10em;
   color: var(--muted);

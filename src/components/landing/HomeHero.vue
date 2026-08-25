@@ -183,7 +183,7 @@ const still = prefersReducedMotion();
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.16em;

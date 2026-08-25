@@ -23,6 +23,23 @@ export interface WorkItem {
   summary: string;
 }
 
+/**
+ * A shipped thing. Same shape as WorkItem plus `result`, because the argument
+ * a finished project makes is what it did, not what it is.
+ */
+export interface ShowcaseItem {
+  tag: string;
+  summary: string;
+  result: string;
+}
+
+/** One panel of the NekoAI slideshow. */
+export interface ServiceSlide {
+  kicker: string;
+  title: string;
+  body: string;
+}
+
 export interface Translation {
   meta: {
     tagline: string;
@@ -30,10 +47,12 @@ export interface Translation {
   };
 
   nav: {
+    showcase: string;
+    partners: string;
     work: string;
+    services: string;
     capabilities: string;
     trajectory: string;
-    partners: string;
     team: string;
     contact: string;
     sideProjects: string;
@@ -76,6 +95,49 @@ export interface Translation {
     languages: string;
     orgLink: string;
     stale: string;
+  };
+
+  /**
+   * Showcase — the finished work. Separate from `work` because the two
+   * sections make different arguments: this one is evidence, `work` is a
+   * roadmap.
+   */
+  showcase: {
+    label: string;
+    heading: string;
+    lede: string;
+    liveLabel: string;
+    caseLabel: string;
+    viewLabel: string;
+    resultLabel: string;
+    items: {
+      nekobuckets: ShowcaseItem;
+      nekomusics: ShowcaseItem;
+      coffoxmc: ShowcaseItem;
+      fujiwara: ShowcaseItem;
+    };
+  };
+
+  /**
+   * Services — the commercial pitch, built around NekoAI. `slides` is an
+   * ordered array rather than a keyed object because the slideshow renders it
+   * in sequence and the count is allowed to change.
+   */
+  services: {
+    label: string;
+    heading: string;
+    lede: string;
+    /** The product pitch, shown once above the slideshow. */
+    pitch: string;
+    productName: string;
+    productTag: string;
+    slides: ServiceSlide[];
+    cta: string;
+    ctaNote: string;
+    prev: string;
+    next: string;
+    /** aria-label pattern for a dot, e.g. "Go to panel {n}". */
+    goTo: string;
   };
 
   work: {
@@ -146,6 +208,11 @@ export interface Translation {
     };
     osuProfile: string;
     website: string;
+    /** aria-label for the row button that promotes a member into the feature
+        plate, e.g. "Show {name}". */
+    showMember: string;
+    /** Marks which member the feature plate is currently showing. */
+    featured: string;
   };
 
   contact: {

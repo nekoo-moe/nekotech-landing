@@ -42,7 +42,7 @@ const partners = computed(() =>
         :heading="t.partners.heading"
         :lede="t.partners.lede"
         heading-id="pt-heading"
-        index="05"
+        index="02"
       />
 
       <ul class="pt__grid" role="list">
@@ -210,7 +210,7 @@ const partners = computed(() =>
 
 .pt__tag,
 .pt__badge {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.13em;

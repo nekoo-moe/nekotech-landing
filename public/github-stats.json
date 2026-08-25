@@ -1,74 +1,78 @@
 {
-  "members": 6,
+  "members": 9,
   "repos": 40,
   "privateRepos": 32,
-  "publicRepos": 9,
-  "totalStars": 3,
-  "totalForks": 1,
+  "publicRepos": 28,
+  "totalStars": 4,
+  "totalForks": 3,
   "languages": [
     {
+      "name": "Lua",
+      "percent": 71
+    },
+    {
       "name": "JavaScript",
-      "percent": 56
+      "percent": 22
     },
     {
       "name": "Vue",
-      "percent": 28
-    },
-    {
-      "name": "HTML",
-      "percent": 7
-    },
-    {
-      "name": "Ruby",
-      "percent": 4
-    },
-    {
-      "name": "TypeScript",
       "percent": 3
     },
     {
-      "name": "EJS",
+      "name": "HTML",
+      "percent": 2
+    },
+    {
+      "name": "Ruby",
       "percent": 1
     },
     {
-      "name": "CSS",
+      "name": "TypeScript",
       "percent": 1
     },
     {
-      "name": "Python",
+      "name": "GLSL",
+      "percent": 0
+    },
+    {
+      "name": "PostScript",
       "percent": 0
     }
   ],
   "topProject": {
-    "name": "NekoTech-DiscordBot",
-    "description": "Dự án Mã nguồn mở của Fujiwara Shin",
-    "commits": 308,
-    "stars": 0,
-    "forks": 0,
-    "language": "JavaScript",
+    "name": "NekoAI",
+    "description": "Your own digital companion lives inside digital world. Customizable personalities, real-time interaction, and multi-platform presence.",
+    "commits": 520,
+    "stars": 1,
+    "forks": 1,
+    "language": "TypeScript",
     "languages": [
       {
-        "name": "JavaScript",
-        "percent": 85
-      },
-      {
-        "name": "HTML",
-        "percent": 13
+        "name": "TypeScript",
+        "percent": 73
       },
       {
         "name": "Vue",
+        "percent": 21
+      },
+      {
+        "name": "GDScript",
         "percent": 2
       },
       {
-        "name": "Python",
-        "percent": 0
+        "name": "C#",
+        "percent": 1
+      },
+      {
+        "name": "JavaScript",
+        "percent": 1
       },
       {
         "name": "CSS",
         "percent": 0
       }
     ],
-    "url": "https://github.com/nekoo-moe/NekoTech-DiscordBot"
+    "url": "https://github.com/nekoo-moe/NekoAI"
   },
   "commitActivity": [
     0,
@@ -77,53 +81,53 @@
     0,
     0,
     0,
-    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    46,
+    82,
+    8,
+    6,
+    50,
     2,
     15,
-    18,
-    16,
-    35,
-    28,
-    53,
-    83,
-    9,
-    9,
-    50,
-    70,
-    44,
-    83,
-    6,
-    49,
-    51,
-    78,
-    64,
-    59,
-    12,
-    10,
+    68,
     2,
+    8,
+    42,
+    60,
+    62,
+    58,
+    8,
+    15,
+    3,
     20,
-    48,
-    4,
-    6,
-    38,
-    18,
-    38,
-    25,
-    31,
-    21,
-    4,
-    15,
     50,
-    0,
-    44,
-    0,
     4,
     6,
-    14,
-    11,
-    0,
-    0
+    35,
+    18,
+    39,
+    34,
+    33,
+    23,
+    6,
+    27,
+    57,
+    2,
+    44,
+    35,
+    19,
+    12,
+    31,
+    139,
+    341,
+    45
   ],
-  "generatedAt": "2026-08-24T16:02:36.826Z",
+  "generatedAt": "2026-08-24T23:28:28.321Z",
   "isFallback": false
 }

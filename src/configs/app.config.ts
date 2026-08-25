@@ -6,15 +6,29 @@
  */
 
 export interface NavItem {
-  key: 'work' | 'capabilities' | 'trajectory' | 'partners' | 'team' | 'contact';
+  key:
+    | 'showcase'
+    | 'partners'
+    | 'work'
+    | 'services'
+    | 'capabilities'
+    | 'trajectory'
+    | 'team'
+    | 'contact';
   hash: string;
 }
 
+/**
+ * Order matches the page, top to bottom — the header's scroll-spy walks this
+ * array in document order, so a mismatch would light the wrong link.
+ */
 export const NAV: NavItem[] = [
+  { key: 'showcase',     hash: '#showcase' },
+  { key: 'partners',     hash: '#partners' },
   { key: 'work',         hash: '#work' },
+  { key: 'services',     hash: '#services' },
   { key: 'capabilities', hash: '#capabilities' },
   { key: 'trajectory',   hash: '#trajectory' },
-  { key: 'partners',     hash: '#partners' },
   { key: 'team',         hash: '#team' },
   { key: 'contact',      hash: '#contact' },
 ];

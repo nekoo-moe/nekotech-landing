@@ -63,7 +63,7 @@ const rows = computed(() =>
         :heading="t.work.heading"
         :lede="t.work.lede"
         heading-id="wk-heading"
-        index="02"
+        index="04"
       />
 
       <ol class="wk__list" role="list">
@@ -213,7 +213,7 @@ const rows = computed(() =>
 .wk__row--linked:hover .wk__name { transform: translateX(2px); }
 
 .wk__tag {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -242,7 +242,7 @@ const rows = computed(() =>
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.13em;

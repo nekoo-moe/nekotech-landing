@@ -169,7 +169,7 @@ const year = new Date().getFullYear();
 
 .sp__tag {
   align-self: flex-start;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.13em;

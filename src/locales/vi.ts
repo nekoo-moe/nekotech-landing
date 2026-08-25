@@ -13,10 +13,12 @@ const vi: Translation = {
   },
 
   nav: {
+    showcase: 'Đã hoàn thành',
+    partners: 'Đối tác',
     work: 'Sản phẩm',
+    services: 'NekoAI',
     capabilities: 'Năng lực',
     trajectory: 'Hành trình',
-    partners: 'Đối tác',
     team: 'Đội ngũ',
     contact: 'Liên hệ',
     sideProjects: 'Dự án phụ',
@@ -60,6 +62,85 @@ const vi: Translation = {
     languages: 'Ngôn ngữ chúng tôi dùng',
     orgLink: 'Xem org trên GitHub',
     stale: 'Ảnh chụp — cập nhật lại mỗi lần deploy',
+  },
+
+  showcase: {
+    label: 'Đã hoàn thành',
+    heading: 'Những thứ đã chạy thật.',
+    lede:
+      'Bốn thứ chúng tôi đã làm xong và vẫn đang bảo trì. Cái nào cũng có người dùng thật, không phải chúng tôi.',
+    liveLabel: 'Đang chạy',
+    caseLabel: 'Dự án',
+    viewLabel: 'Xem',
+    resultLabel: 'Kết quả',
+    items: {
+      nekobuckets: {
+        tag: 'Discord bot',
+        summary:
+          'Một Discord bot đa dụng, lo phần quản trị và giải trí mà cộng đồng thực sự cần, không kèm gói dashboard trả phí.',
+        result: 'Chạy thật từ 12/2025',
+      },
+      nekomusics: {
+        tag: 'Discord bot · Mã nguồn mở',
+        summary:
+          'Bot nhạc mã nguồn mở. Âm thanh chất lượng cao trong voice channel, không có gói premium chặn hàng chờ.',
+        result: 'Mã nguồn mở · không thu phí hàng chờ',
+      },
+      coffoxmc: {
+        tag: 'Game server · Việc khách hàng',
+        summary:
+          'Vận hành kỹ thuật cho LangBangVN — CoffoxMC: plugin, chống gian lận, backup và tối ưu để server đông người không bị giật.',
+        result: 'Đối tác kỹ thuật từ 01/2026',
+      },
+      fujiwara: {
+        tag: 'Discord bot · Làm riêng',
+        summary:
+          'Một Discord bot làm riêng cho một server thay vì cho hàng trăm nghìn server: quản trị, nhạc, level và lệnh tuỳ chỉnh, do chúng tôi triển khai và bảo trì.',
+        result: 'Đã triển khai, được bảo trì, khách hàng sở hữu',
+      },
+    },
+  },
+
+  services: {
+    label: 'Dịch vụ',
+    heading: 'NekoAI, và nó làm được gì cho bạn.',
+    lede:
+      'Sản phẩm chúng tôi đang kinh doanh, gói trong bốn khung. Mọi thứ còn lại trên trang này là bối cảnh cho nó.',
+    pitch:
+      'Người bạn đồng hành số của riêng bạn, sống ngay trong thiết bị của bạn, lo việc thường ngày chỉ bằng một câu lệnh! Để bạn tự làm chủ đời sống số của mình — dễ dàng, ở đâu cũng được, lúc nào cũng được.',
+    productName: 'NekoAI',
+    productTag: 'Người bạn đồng hành số',
+    slides: [
+      {
+        kicker: 'Đồng hành',
+        title: 'Nó sống trong thiết bị của bạn.',
+        body:
+          'Không phải một tab trình duyệt bạn cứ quên mất. NekoAI chạy ngay nơi bạn đang làm việc, có mặt, có giọng, và nhớ hôm qua bạn đã hỏi gì.',
+      },
+      {
+        kicker: 'Một câu lệnh',
+        title: 'Việc thường ngày, gói trong một dòng.',
+        body:
+          'File, lời nhắc, tìm kiếm, script, tin nhắn. Bạn nói một lần; agent tự chọn công cụ rồi báo lại đúng những gì nó đã làm.',
+      },
+      {
+        kicker: 'Làm chủ',
+        title: 'Tự làm chủ đời sống số.',
+        body:
+          'Dữ liệu vẫn là của bạn: lưu ưu tiên trên máy, bộ nhớ xuất ra được, và câu trả lời rõ ràng cho việc gì đã gửi đi đâu. Không đồng bộ ngầm.',
+      },
+      {
+        kicker: 'Mọi nơi',
+        title: 'Dễ dàng, ở đâu cũng được, lúc nào cũng được.',
+        body:
+          'Máy tính, điện thoại, terminal — vẫn một người đồng hành với cùng một bộ nhớ, trên bất cứ màn hình nào bạn đang cầm.',
+      },
+    ],
+    cta: 'Trao đổi với chúng tôi về NekoAI',
+    ctaNote: 'Beta công khai mở Q3 2026 · truy cập sớm theo yêu cầu',
+    prev: 'Khung trước',
+    next: 'Khung sau',
+    goTo: 'Tới khung {n}',
   },
 
   work: {
@@ -212,6 +293,8 @@ const vi: Translation = {
     },
     osuProfile: 'Trang osu!',
     website: 'Trang cá nhân',
+    showMember: 'Xem {name}',
+    featured: 'Đang xem',
   },
 
   contact: {

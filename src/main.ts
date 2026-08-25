@@ -1,6 +1,14 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
+
+// Open Runde, self-hosted. Loaded before globals.css so the @font-face rules
+// exist by the time the custom properties reference the family.
+import '@fontsource/open-runde/400.css';
+import '@fontsource/open-runde/500.css';
+import '@fontsource/open-runde/600.css';
+import '@fontsource/open-runde/700.css';
+
 import './globals.css';
 
 createApp(App).use(router).mount('#app');

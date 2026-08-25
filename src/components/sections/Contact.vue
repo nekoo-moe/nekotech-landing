@@ -240,7 +240,7 @@ onBeforeUnmount(() => { if (timer) clearInterval(timer); });
 .ct__channel-link:hover { padding-left: var(--space-3); }
 
 .ct__channel-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -295,7 +295,7 @@ onBeforeUnmount(() => { if (timer) clearInterval(timer); });
 }
 
 .ft__wordmark span {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   font-weight: 400;
   text-transform: uppercase;
@@ -348,7 +348,7 @@ onBeforeUnmount(() => { if (timer) clearInterval(timer); });
 .ft__tz { color: var(--ink-faint); }
 
 .ft__nav-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;

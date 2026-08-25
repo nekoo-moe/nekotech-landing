@@ -13,10 +13,12 @@ const en: Translation = {
   },
 
   nav: {
+    showcase: 'Shipped',
+    partners: 'Partners',
     work: 'Work',
+    services: 'NekoAI',
     capabilities: 'Capabilities',
     trajectory: 'Trajectory',
-    partners: 'Partners',
     team: 'Team',
     contact: 'Contact',
     sideProjects: 'Side projects',
@@ -60,6 +62,85 @@ const en: Translation = {
     languages: 'What we write',
     orgLink: 'Browse the org on GitHub',
     stale: 'Snapshot — refreshed on every deploy',
+  },
+
+  showcase: {
+    label: 'Shipped',
+    heading: 'Work that is already running.',
+    lede:
+      'Four things we finished and still maintain. Every one of them has users who are not us.',
+    liveLabel: 'Live',
+    caseLabel: 'Case',
+    viewLabel: 'View',
+    resultLabel: 'Result',
+    items: {
+      nekobuckets: {
+        tag: 'Discord bot',
+        summary:
+          'A general-purpose Discord bot covering the moderation and entertainment a community actually asks for, without a dashboard upsell.',
+        result: 'Running in production since Dec 2025',
+      },
+      nekomusics: {
+        tag: 'Discord bot · Open source',
+        summary:
+          'An open-source music bot. High-quality audio in a voice channel, with no premium tier gating the queue.',
+        result: 'Open source · queue never paywalled',
+      },
+      coffoxmc: {
+        tag: 'Game server · Client work',
+        summary:
+          'Server engineering for LangBangVN — CoffoxMC: plugin work, anti-cheat, backups and the tuning that keeps a full server from stuttering.',
+        result: 'Technical partner since Jan 2026',
+      },
+      fujiwara: {
+        tag: 'Discord bot · Bespoke',
+        summary:
+          'A Discord bot shaped to one server rather than a hundred thousand: moderation, music, levelling and custom commands, deployed and maintained by us.',
+        result: 'Deployed, maintained, owned by the client',
+      },
+    },
+  },
+
+  services: {
+    label: 'Services',
+    heading: 'NekoAI, and what it does for you.',
+    lede:
+      'The product we sell, in four panels. Everything else on this page is context for it.',
+    pitch:
+      'Your own cyber living companion lives inside your digital device, powering up you daily task with a command! Allow you own your digital life, cyber living, easily, anywhere, anytime.',
+    productName: 'NekoAI',
+    productTag: 'Cyber living companion',
+    slides: [
+      {
+        kicker: 'Companion',
+        title: 'It lives on your device.',
+        body:
+          'Not a browser tab you keep forgetting. NekoAI runs where you already work, with a face, a voice and a memory of what you asked it yesterday.',
+      },
+      {
+        kicker: 'One command',
+        title: 'Your daily tasks, on a single line.',
+        body:
+          'Files, reminders, searches, scripts, messages. You say the thing once; the agent picks the tools and reports back with what it actually did.',
+      },
+      {
+        kicker: 'Ownership',
+        title: 'Own your digital life.',
+        body:
+          'Your data stays yours: local-first storage, exportable memory, and a plain answer to what was sent where. No silent syncing.',
+      },
+      {
+        kicker: 'Anywhere',
+        title: 'Easily, anywhere, anytime.',
+        body:
+          'Desktop, phone, terminal — the same companion with the same memory, whichever screen you happen to be holding.',
+      },
+    ],
+    cta: 'Talk to us about NekoAI',
+    ctaNote: 'Public beta opens Q3 2026 · early access by request',
+    prev: 'Previous panel',
+    next: 'Next panel',
+    goTo: 'Go to panel {n}',
   },
 
   work: {
@@ -212,6 +293,8 @@ const en: Translation = {
     },
     osuProfile: 'osu! profile',
     website: 'Personal site',
+    showMember: 'Show {name}',
+    featured: 'Featured',
   },
 
   contact: {
