@@ -17,16 +17,18 @@
  * `shipped` is not translated copy — it is a fact about each milestone — so it
  * lives here, not in the locale.
  *
- * The section sits on a `DotWaveField` — a contained dot lattice with a wave
- * crossing it. A timeline is a measured sequence, so graph paper with time
- * moving through it is the honest background for one; it also stops the
- * section reading as copy floating on the bare page canvas.
+ * The section used to run its own animated dot lattice (`DotWaveField`, a
+ * canvas-2D grid with a wave crossing it). It no longer does. The page has one
+ * background now — the fixed contour field — and a second animated layer here
+ * meant a per-frame nested loop over a few hundred dots on the CPU for scenery
+ * that the field already provides. What is left is a static graph-paper wash,
+ * which is the part of the metaphor that was actually doing the work: a
+ * timeline is a measured sequence, so it reads on ruled ground.
  */
 import { computed, ref } from 'vue';
 import { useLanguage } from '@/components/providers/LanguageProvider.vue';
 import { useScrollProgress } from '@/composables/useScrollProgress';
 import SectionHead from '@/components/shared/SectionHead.vue';
-import DotWaveField from '@/components/shared/DotWaveField.vue';
 
 const { t } = useLanguage();
 
@@ -60,7 +62,7 @@ useScrollProgress(spine, { start: 0.8, end: 0.5 });
 
 <template>
   <section id="trajectory" class="tj section section--ruled" aria-labelledby="tj-heading">
-    <DotWaveField :gap="28" :intensity="0.46" />
+    <span class="tj__paper" aria-hidden="true"></span>
 
     <div class="container tj__inner">
       <SectionHead
@@ -109,6 +111,30 @@ useScrollProgress(spine, { start: 0.8, end: 0.5 });
    over it — hence the explicit stacking rather than relying on source order. */
 .tj { position: relative; isolation: isolate; }
 .tj__inner { position: relative; z-index: 1; }
+
+/* Ruled ground. Two 1px repeating gradients — one paint, no script, no canvas
+   — masked so the grid dissolves before it reaches the copy on the right and
+   never ends on a hard line at a section seam. */
+.tj__paper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to right, oklch(1 0 0 / 0.030) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(to bottom, oklch(1 0 0 / 0.030) 0 1px, transparent 1px 28px);
+  mask-image: radial-gradient(
+    110% 80% at 10% 26%,
+    oklch(0 0 0) 0%,
+    oklch(0 0 0 / 0.5) 50%,
+    transparent 86%
+  );
+}
+
+@media (max-width: 720px) {
+  /* On a phone the copy fills the column; the grid would only add noise. */
+  .tj__paper { display: none; }
+}
 
 .tj__spine {
   --sp: 0;

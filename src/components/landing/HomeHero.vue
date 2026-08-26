@@ -1,7 +1,12 @@
 <script setup lang="ts">
 /**
- * Hero. The terrain sits *behind* the type and is inert to the pointer, so a
- * CTA is never stolen by the canvas — the old Spline iframe had that bug.
+ * Hero.
+ *
+ * It no longer owns a scene. The contour field in `VectorTopography` is fixed
+ * to the viewport and runs behind the whole document, so the hero reads the
+ * page's own background instead of stacking a second WebGL context on top of
+ * it — which is what made this section the most expensive thing on the page.
+ * All that is left here is a veil that lifts the type off the field.
  *
  * Reveal is local rather than scroll-driven: the hero is above the fold, so
  * waiting for an IntersectionObserver would mean a frame of empty page.
@@ -10,7 +15,6 @@ import { ref, onMounted } from 'vue';
 import { useLanguage } from '@/components/providers/LanguageProvider.vue';
 import { scrollToHash } from '@/composables/useSectionNav';
 import { prefersReducedMotion } from '@/composables/useCanvasScene';
-import TerrainField from '@/components/three/TerrainField.vue';
 
 const { t } = useLanguage();
 
@@ -27,7 +31,6 @@ const still = prefersReducedMotion();
 <template>
   <section id="home" class="hero" aria-labelledby="hero-heading">
     <div class="hero__stage" aria-hidden="true">
-      <TerrainField />
       <div class="hero__veil"></div>
     </div>
 
@@ -70,7 +73,7 @@ const still = prefersReducedMotion();
   border-bottom: 1px solid var(--border);
 }
 
-/* ── Canvas layer ──────────────────────────────────────────────────────── */
+/* ── Veil layer ────────────────────────────────────────────────────────── */
 .hero__stage {
   position: absolute;
   inset: 0;
@@ -78,18 +81,24 @@ const still = prefersReducedMotion();
   pointer-events: none;
 }
 
-/* Reads the terrain out of the way of the type on the left, and fades it
-   into the section seam at the bottom. */
+/* Holds the contour field back behind the headline on the left. Far lighter
+   than the version that sat over the old terrain — the field itself is a
+   fraction of its brightness, so a heavy veil here would just make the hero
+   the one flat panel on an otherwise lit page.
+
+   Note the bottom stop is translucent, not `var(--bg)`. The field is fixed to
+   the viewport and runs the whole document now, so an opaque stop at the
+   section seam would read as a black band sliding across a continuous
+   background rather than as the hero ending. */
 .hero__veil {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(to right,
-      var(--bg) 0%,
-      oklch(0.055 0 0 / 0.86) 34%,
-      oklch(0.055 0 0 / 0.22) 62%,
-      transparent 100%),
-    linear-gradient(to bottom, var(--bg) 0%, transparent 22%, transparent 74%, var(--bg) 100%);
+      oklch(0.055 0 0 / 0.82) 0%,
+      oklch(0.055 0 0 / 0.52) 38%,
+      transparent 74%),
+    linear-gradient(to bottom, oklch(0.055 0 0 / 0.70) 0%, transparent 26%, transparent 82%, oklch(0.055 0 0 / 0.45) 100%);
 }
 
 /* ── Type layer ────────────────────────────────────────────────────────── */
@@ -220,13 +229,15 @@ const still = prefersReducedMotion();
 /* ── Responsive ────────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
   .hero__heading { max-width: 14ch; }
+  /* Narrow screens put the copy over the middle of the frame, so the veil
+     runs top-to-bottom instead of left-to-right. */
   .hero__veil {
     background:
       linear-gradient(to bottom,
-        var(--bg) 0%,
-        oklch(0.055 0 0 / 0.78) 30%,
-        oklch(0.055 0 0 / 0.40) 60%,
-        var(--bg) 100%);
+        oklch(0.055 0 0 / 0.72) 0%,
+        oklch(0.055 0 0 / 0.58) 34%,
+        oklch(0.055 0 0 / 0.34) 66%,
+        oklch(0.055 0 0 / 0.50) 100%);
   }
 }
 

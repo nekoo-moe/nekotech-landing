@@ -74,9 +74,23 @@ export function useSceneActive(target: Ref<HTMLElement | null>, rootMargin = '12
   return { active };
 }
 
-/** Frame-rate independent damping. `rate` is roughly "per 16ms". */
+/**
+ * Frame-rate independent damping towards `target`.
+ *
+ * `rate` is an exponential decay constant in units of "per second": the gap to
+ * the target shrinks by `e^-rate` every second, so 4 closes ~98% of it in one
+ * second and 6 closes ~99.8%. It is deliberately unbounded above — the earlier
+ * `Math.pow(1 - rate, dt * 60)` form treated `rate` as a 0..1 lerp factor and
+ * returned NaN for every rate above 1, because a negative base raised to a
+ * fractional exponent has no real value. Every caller passes a rate above 1.
+ *
+ * `dt` is clamped so a tab that was parked for a minute snaps instead of
+ * overshooting on the first frame back.
+ */
 export function damp(current: number, target: number, rate: number, dt: number): number {
-  return current + (target - current) * (1 - Math.pow(1 - rate, dt * 60));
+  if (!(dt > 0)) return current;
+  const blend = 1 - Math.exp(-rate * Math.min(dt, 0.25));
+  return current + (target - current) * blend;
 }
 
 /** Device pixel ratio, capped — a 3× DPR phone does not need 3× fill. */

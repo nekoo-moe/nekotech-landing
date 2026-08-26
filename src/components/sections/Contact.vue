@@ -3,16 +3,20 @@
  * Contact — the closing plate.
  *
  * This replaces `OpenSourceCTA.vue`, which embedded a Spline iframe
- * (`boxeshover-…`) as its background. `SignalField` is the local replacement:
- * same role, no third-party frame, no watermark, and it stops rendering when
- * scrolled out of view.
+ * (`boxeshover-…`) as its background.
+ *
+ * It used to own a second WebGL context (`SignalField`, an OGL dot lattice).
+ * That is gone: the page now has one background, the fixed `VectorTopography`
+ * field, and this section reads it through a veil like every other section.
+ * Two contexts meant two GPU programs alive at once and a hand-off between
+ * them mid-scroll, for two variations on "lattice with a wave in it".
  *
  * The footer lives here rather than in its own component because it shares
- * this section's background canvas — splitting them would mean two stacking
- * contexts fighting over one gradient. That shared canvas is also what the
- * footer's closing wordmark is for: the type is knocked out to transparent so
- * the moving lattice reads *through* the letterforms. It is the last thing on
- * the page, so it is the one place a large gesture costs nothing that follows.
+ * this section's veil — splitting them would mean two stacking contexts
+ * fighting over one gradient. That shared backdrop is also what the footer's
+ * closing wordmark is for: the type is knocked out to transparent so the
+ * contour field reads *through* the letterforms. It is the last thing on the
+ * page, so it is the one place a large gesture costs nothing that follows.
  */
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useLanguage } from '@/components/providers/LanguageProvider.vue';
@@ -20,7 +24,6 @@ import { NAV, ORG, SITE_REPO } from '@/configs/app.config';
 import { scrollToHash } from '@/composables/useSectionNav';
 import { useScrollProgress } from '@/composables/useScrollProgress';
 import { prefersReducedMotion } from '@/composables/useCanvasScene';
-import SignalField from '@/components/three/SignalField.vue';
 
 const { t } = useLanguage();
 
@@ -65,7 +68,6 @@ onBeforeUnmount(() => { if (timer) clearInterval(timer); });
 <template>
   <section id="contact" class="ct" aria-labelledby="ct-heading">
     <div class="ct__stage" aria-hidden="true">
-      <SignalField />
       <div class="ct__veil"></div>
     </div>
 
@@ -150,8 +152,8 @@ onBeforeUnmount(() => { if (timer) clearInterval(timer); });
       </div>
 
       <!-- Closing wordmark. The letterforms are knocked out to transparent so
-           the SignalField lattice behind the section shows through them; it is
-           decorative, and the real wordmark is already above. -->
+           the page's contour field shows through them; it is decorative, and
+           the real wordmark is already above. -->
       <p class="ft__mark" aria-hidden="true">NEKOTECH</p>
     </footer>
   </section>
@@ -173,14 +175,17 @@ onBeforeUnmount(() => { if (timer) clearInterval(timer); });
   pointer-events: none;
 }
 
-/* Fades the lattice out under the type and into both section seams, so the
-   heading never has to compete with a moving dot. */
+/* Holds the page's contour field back under the type. Lighter than the version
+   that veiled the old local lattice: that canvas sat inside this section and
+   could be dimmed to nothing, whereas this one runs the length of the document
+   — an opaque `var(--bg)` stop here would punch a flat rectangle into a field
+   that is continuous everywhere else. So the seams stay translucent and only
+   the middle, where the heading is, is genuinely held down. */
 .ct__veil {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(120% 80% at 50% 40%, transparent 0%, oklch(0.055 0 0 / 0.72) 62%, var(--bg) 100%),
-    linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 62%, var(--bg) 96%);
+    radial-gradient(120% 80% at 50% 40%, oklch(0.055 0 0 / 0.30) 0%, oklch(0.055 0 0 / 0.62) 62%, oklch(0.055 0 0 / 0.42) 100%);
 }
 
 /* ── CTA ───────────────────────────────────────────────────────────────── */
